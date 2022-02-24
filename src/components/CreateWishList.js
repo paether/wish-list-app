@@ -1,53 +1,72 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useState } from "react";
+import bcrypt from "bcryptjs";
 import {
   createWishList as createWishListFirabase,
-  getWishLists,
+  getWishList,
 } from "../firebase";
+import "./CreateWishList.css";
 
 export default function CreateWishList({ onCreation, userId }) {
   const createWishList = async (e) => {
     e.preventDefault();
     const listName = document.getElementById("list_name").value;
-    const secretKey = document.getElementById("secret_key").value;
-    const docref = await createWishListFirabase(userId, listName, secretKey);
+    const hashedPassword = bcrypt.hashSync(
+      document.getElementById("secret_key").value,
+      bcrypt.genSaltSync()
+    );
+    const docref = await createWishListFirabase(
+      userId,
+      listName,
+      hashedPassword
+    );
     onCreation(docref.id);
   };
 
-  const test = async (e) => {
+  const findList = async (e) => {
     e.preventDefault();
-    const wishListsRef = getWishLists();
-    const q = query(wishListsRef, where("secretKey", "==", "titkos"));
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot) {
-      console.log(querySnapshot.docs[0].data());
+    const listId = document.getElementById("list_id").value;
+    const wishListDoc = await getWishList(listId);
+    if (!wishListDoc) {
+      console.log("cannot find list by ID!");
+      return;
     }
+    if (
+      bcrypt.compareSync(
+        document.getElementById("secret_key").value,
+        wishListDoc.data().secretKey
+      )
+    ) {
+      onCreation(listId);
+      return;
+    }
+    console.log("the provided password is not good!");
   };
+
   return (
     <div className="create-wish-list-container">
-      <form name="create-wish-list-form">
+      <form className="create-wish-list-form">
         <input
           type="text"
           name="list_name"
           id="list_name"
           placeholder="Please provide a name for your Wish List.."
         />
+        Or if you want to open an already existing list please provide the ID of
+        the list and the secret key to it
         <input
-          type="text"
+          type="password"
           name="secret_key"
           id="secret_key"
-          placeholder="Please provide a secret key.."
+          placeholder="Please provide the secret key.."
         />
         <input
           type="text"
-          name="open_list"
-          id="open_list"
-          placeholder="key to open"
+          name="list_id"
+          id="list_id"
+          placeholder="Please provide the ID of the list"
         />
-
         <button onClick={createWishList}>Create list</button>
-        <button onClick={test}>Create list</button>
+        <button onClick={findList}>find list</button>
       </form>
     </div>
   );

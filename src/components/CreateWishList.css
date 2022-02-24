@@ -1,0 +1,4 @@
+.create-wish-list-form {
+  display: flex;
+  flex-direction: column;
+}
