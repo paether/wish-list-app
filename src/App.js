@@ -16,6 +16,7 @@ function App() {
   const [wishListId, setWishListId] = useQueryURL("listId");
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsloading] = useState(false);
+
   const [storage, setStorage] = useState(
     JSON.parse(localStorage.getItem("authorizedListIds")) || []
   );
