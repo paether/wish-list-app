@@ -7,12 +7,14 @@ import {
   onSnapshot,
   collection,
   getDoc,
+  setDoc,
   getDocs,
   addDoc,
   updateDoc,
   doc,
   serverTimestamp,
   arrayUnion,
+  deleteDoc,
 } from "firebase/firestore";
 import { getAuth, signInAnonymously } from "firebase/auth";
 
@@ -33,9 +35,9 @@ const createWishList = (userId, whishListName, listSecretKey) => {
   const wishListRefCol = collection(db, "wishLists");
   return addDoc(wishListRefCol, {
     created: serverTimestamp(),
+    locked: false,
     secretKey: listSecretKey,
     listName: whishListName,
-    id: uniqid(),
     createdBy: userId,
     users: [
       {
@@ -75,6 +77,43 @@ const addUserWishList = (wishListId, userId) => {
   });
 };
 
+export const updateWishListStatus = (wishListId, locked) => {
+  const wishListRefDoc = doc(db, "wishLists", wishListId);
+  return updateDoc(
+    wishListRefDoc,
+    {
+      locked,
+    },
+    { merge: true }
+  );
+};
+
+export const updateWishListItemName = (wishListId, listItemId, name) => {
+  const listItemRef = doc(db, "wishLists", wishListId, "items", listItemId);
+  return (
+    updateDoc(listItemRef, {
+      name,
+    }),
+    { merge: true }
+  );
+};
+
+export const updateWishListItemStatus = (wishListId, listItemId, checked) => {
+  const listItemRef = doc(db, "wishLists", wishListId, "items", listItemId);
+  return updateDoc(
+    listItemRef,
+    {
+      checked,
+    },
+    { merge: true }
+  );
+};
+
+export const deleteWishListItem = (wishListId, listItemId) => {
+  const listItemRef = doc(db, "wishLists", wishListId, "items", listItemId);
+  return deleteDoc(listItemRef);
+};
+
 const addWishListItem = async (item, wishListId) => {
   const querySnapshot = await getWishListItems(wishListId);
   const wishListItems = querySnapshot.docs;
@@ -83,10 +122,12 @@ const addWishListItem = async (item, wishListId) => {
       wishListItem.data().name.toLowerCase() === item.toLowerCase()
   );
   if (!matchingItem) {
-    const itemsColRef = collection(db, "wishLists", wishListId, "items");
-    return addDoc(itemsColRef, {
+    const id = uniqid();
+    const itemsColRef = doc(db, "wishLists", wishListId, "items", id);
+    return setDoc(itemsColRef, {
+      id,
+      checked: false,
       name: item,
-      id: uniqid(),
       created: serverTimestamp(),
     });
   }

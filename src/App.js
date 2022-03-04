@@ -4,6 +4,11 @@ import * as FireBase from "./firebase";
 import useQueryURL from "./hooks/useQueryURL";
 import CreateWishList from "./components/CreateWishList";
 import WishListMenu from "./components/WishListMenu";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Home from "./components/Home";
+import Loading from "./components/Loading";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   const [wishList, setWishList] = useState();
@@ -14,10 +19,16 @@ function App() {
   const [storage, setStorage] = useState(
     JSON.parse(localStorage.getItem("authorizedListIds")) || []
   );
+  const [language, setLanguage] = useState(
+    JSON.parse(localStorage.getItem("language")) || "en"
+  );
 
   useEffect(() => {
     localStorage.setItem("authorizedListIds", JSON.stringify(storage));
   }, [storage]);
+  useEffect(() => {
+    localStorage.setItem("language", JSON.stringify(language));
+  }, [language]);
 
   useEffect(() => {
     (async function fetchData() {
@@ -45,42 +56,54 @@ function App() {
   };
 
   function onWhishListCreation(wishListId) {
-    setWishListId(wishListId);
+    setWishListId(wishListId, "/wishList");
     setIsAuthorized(true);
     addListIdToLocalStorage(wishListId);
   }
 
-  if (isLoading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-ring">
-          {/* these empty divs are required for the loading animation */}
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div className="loading-text">Loading..</div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="App">
-        {wishList && userId ? (
-          <WishListMenu
-            wishList={wishList}
-            wishListId={wishListId}
-            isAuthorized={isAuthorized}
-            onSetIsAuthorized={setIsAuthorized}
-            localStorage={storage}
-            onSetLocalStorage={addListIdToLocalStorage}
-          />
-        ) : (
-          <CreateWishList onCreation={onWhishListCreation} userId={userId} />
-        )}
-      </div>
-    );
-  }
+  return (
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route
+          path="/"
+          element={<Home language={language} isLoading={isLoading} />}
+        />
+        <Route
+          path="/create"
+          element={
+            <CreateWishList
+              isLoading={isLoading}
+              onCreation={onWhishListCreation}
+              userId={userId}
+              language={language}
+            />
+          }
+        />
+        <Route
+          path="/wishList"
+          element={
+            wishList && userId ? (
+              <WishListMenu
+                isLoading={isLoading}
+                language={language}
+                wishList={wishList}
+                userId={userId}
+                wishListId={wishListId}
+                isAuthorized={isAuthorized}
+                onSetIsAuthorized={setIsAuthorized}
+                localStorage={storage}
+                onSetLocalStorage={addListIdToLocalStorage}
+              />
+            ) : (
+              <Loading language={language} />
+            )
+          }
+        />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
 }
 
 export default App;

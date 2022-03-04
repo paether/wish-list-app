@@ -4,7 +4,11 @@ export default function AddlistItem({ wishListId }) {
   const addItem = async (e) => {
     e.preventDefault();
     const itemDesc = document.getElementById("list_item").value;
-    await addWishListItem(itemDesc, wishListId);
+    try {
+      await addWishListItem(itemDesc, wishListId);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -15,6 +19,7 @@ export default function AddlistItem({ wishListId }) {
         name="item_desc"
         id="list_item"
         placeholder="item name.."
+        autoComplete="off"
       />
       <button type="submit" onClick={addItem}>
         Add

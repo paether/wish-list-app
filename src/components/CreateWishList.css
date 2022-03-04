@@ -1,4 +1,56 @@
 .create-wish-list-form {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #00a9bb;
+  padding: 50px 100px;
+  border: 3px solid black;
+  box-shadow: 15px 15px 1px #001f36, 15px 15px 1px 2px black;
+}
+.create-wish-list-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.create-input {
+  width: 100%;
+  font-size: 1.3rem;
+  line-height: 1.5rem;
+  margin-bottom: 28px;
+  border: none;
+  border-bottom: 5px solid black;
+  background: #00a9bb;
+  min-width: 250px;
+  padding-left: 5px;
+  outline: none;
+  color: black;
+}
+.create-input:focus {
+  border-bottom: 5px solid white;
+}
+.create-input:not(:placeholder-shown) {
+  border-bottom: 5px solid #0059dd;
+}
+.create-button {
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  padding: 5px 20px;
+  display: block;
+  color: black;
+  background: #0059dd;
+  letter-spacing: 2px;
+  outline: none;
+  border: 1px solid black;
+  box-shadow: 3px 3px 1px black, 3px 3px 1px 1px black;
+  transition: all 0.15s ease-in-out;
+}
+.create-button:hover {
+  background: white;
+  border: 1px solid black;
+  transform: translateY(-0.2rem);
+}
+.create-button:active {
+  transform: translateY(0rem);
 }

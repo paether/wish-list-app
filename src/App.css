@@ -1,8 +1,33 @@
-.App {
-  text-align: center;
+@import url("https://fonts.googleapis.com/css?family=Red+Hat+Display:900&display=swap");
+html {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-image: url("./utils/stacked-waves-haikei.svg");
 }
+body {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: "Red Hat Display", sans-serif;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+#root {
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.container {
+  min-height: 100%;
+  min-width: 100%;
+}
+
 .loading-ring {
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
   width: 80px;
   height: 80px;
@@ -17,7 +42,7 @@
   border: 8px solid rgb(0, 0, 0);
   border-radius: 50%;
   animation: loading-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: rgb(3, 3, 3) transparent transparent transparent;
+  border-color: rgb(5, 5, 5) transparent transparent transparent;
 }
 .loading-ring div:nth-child(1) {
   animation-delay: -0.45s;

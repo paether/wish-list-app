@@ -5,16 +5,19 @@ export default function useQueryURL(id) {
     new URLSearchParams(window.location.search).get(id)
   );
 
-  const updateQueryStringWithoutReload = (queryString) => {
-    const { protocol, host, pathname } = window.location;
-    const newUrl = `${protocol}//${host}${pathname}?${queryString}`;
+  const updateQueryStringWithoutReload = (queryString, newPath) => {
+    const { protocol, host } = window.location;
+    const newUrl = `${protocol}//${host}${newPath}?${queryString}`;
     window.history.pushState({ path: newUrl }, "", newUrl);
   };
 
   const onSetQueryString = useCallback(
-    (newParam) => {
+    (newParam, newPath) => {
       setParam(newParam);
-      updateQueryStringWithoutReload(newParam ? `${id}=${newParam}` : "");
+      updateQueryStringWithoutReload(
+        newParam ? `${id}=${newParam}` : "",
+        newPath
+      );
     },
     [id, setParam]
   );

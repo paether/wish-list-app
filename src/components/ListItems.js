@@ -1,4 +1,10 @@
-import { streamWishListItems } from "../firebase";
+import {
+  streamWishListItems,
+  updateWishListItemName,
+  deleteWishListItem,
+  updateWishListItemStatus,
+  updateWishListStatus,
+} from "../firebase";
 
 import React, { useEffect, useState } from "react";
 
@@ -17,10 +23,35 @@ export default function ListItems({ wishListId }) {
 
   return (
     <div className="list-items-container">
+      <button
+        onClick={() => navigator.clipboard.writeText(window.location.href)}
+      >
+        copy link
+      </button>
+      <button onClick={() => updateWishListStatus(wishListId, true)}>
+        lock
+      </button>
       {wishListItems.map((listItem) => {
         return (
           <div key={listItem.id} className="list-item">
             {listItem.name}
+            <button onClick={() => deleteWishListItem(wishListId, listItem.id)}>
+              delete
+            </button>
+            <button
+              onClick={() =>
+                updateWishListItemName(wishListId, listItem.id, "updated")
+              }
+            >
+              update
+            </button>
+            <button
+              onClick={() =>
+                updateWishListItemStatus(wishListId, listItem.id, true)
+              }
+            >
+              update
+            </button>
           </div>
         );
       })}

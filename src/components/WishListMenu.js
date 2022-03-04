@@ -2,7 +2,8 @@ import AddlistItem from "./AddListItem";
 import ListItems from "./ListItems";
 import bcrypt from "bcryptjs";
 import { getWishList } from "../firebase";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import "./WishListMenu.css";
 
 export default function WishListMenu({
   wishList,
@@ -11,6 +12,7 @@ export default function WishListMenu({
   onSetIsAuthorized,
   localStorage,
   onSetLocalStorage,
+  isLoading,
 }) {
   useEffect(() => {
     const idInStorage = localStorage.find((id) => id === wishListId);
@@ -42,25 +44,25 @@ export default function WishListMenu({
   if (!isAuthorized) {
     return (
       <div className="not-authorized-container">
-        <input
-          type="password"
-          name="item_desc"
-          id="secret_key"
-          placeholder="provide password.."
-        />
-        <div>you need to provide a password for this list to access it!</div>
-        <button onClick={checkPasswordAndId}>check password</button>
+        <form>
+          <input
+            type="password"
+            name="item_desc"
+            id="secret_key"
+            placeholder="provide password.."
+          />
+          <div>you need to provide a password for this list to access it!</div>
+          <button onClick={checkPasswordAndId}>check password</button>
+        </form>
       </div>
     );
   } else {
     return (
-      <div>
-        <div className="wish-list-menu-container">
-          <h1>You are editing this list: {wishList.listName}</h1>
-          <AddlistItem wishListId={wishListId} />
-          <ListItems wishListId={wishListId} />
-        </div>
-        )
+      <div className="wish-list-menu-container">
+        <h1>Welcome to the list:</h1>
+        <div className="list-name">{wishList.listName}</div>
+        <AddlistItem wishListId={wishListId} />
+        <ListItems wishListId={wishListId} />
       </div>
     );
   }
