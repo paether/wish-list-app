@@ -1,7 +1,7 @@
 import "./Header.css";
 import { useNavigate, useEffect } from "react-router-dom";
 
-export default function Header(props) {
+export default function Header({ wishListId }) {
   const navigate = useNavigate();
 
   const handleClick = (e, path) => {
@@ -23,7 +23,12 @@ export default function Header(props) {
             Home
           </li>
           <li
-            onClick={(e) => handleClick(e, "/searchList")}
+            onClick={(e) =>
+              handleClick(
+                e,
+                wishListId ? `/wishList?listId=${wishListId}` : "/wishList"
+              )
+            }
             className="header-item open-list"
           >
             Open

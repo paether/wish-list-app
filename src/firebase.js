@@ -31,12 +31,13 @@ const authenticateAnonymously = () => {
   return signInAnonymously(getAuth(app));
 };
 
-const createWishList = (userId, whishListName, listSecretKey) => {
+const createWishList = (userId, whishListName, secretKey, adminSecretKey) => {
   const wishListRefCol = collection(db, "wishLists");
   return addDoc(wishListRefCol, {
     created: serverTimestamp(),
     locked: false,
-    secretKey: listSecretKey,
+    secretKey,
+    adminSecretKey,
     listName: whishListName,
     createdBy: userId,
     users: [
@@ -114,12 +115,12 @@ export const deleteWishListItem = (wishListId, listItemId) => {
   return deleteDoc(listItemRef);
 };
 
-const addWishListItem = async (item, wishListId) => {
+const addWishListItem = async (itemName, wishListId, link) => {
   const querySnapshot = await getWishListItems(wishListId);
   const wishListItems = querySnapshot.docs;
   const matchingItem = wishListItems.find(
     (wishListItem) =>
-      wishListItem.data().name.toLowerCase() === item.toLowerCase()
+      wishListItem.data().name.toLowerCase() === itemName.toLowerCase()
   );
   if (!matchingItem) {
     const id = uniqid();
@@ -127,7 +128,8 @@ const addWishListItem = async (item, wishListId) => {
     return setDoc(itemsColRef, {
       id,
       checked: false,
-      name: item,
+      name: itemName,
+      link,
       created: serverTimestamp(),
     });
   }

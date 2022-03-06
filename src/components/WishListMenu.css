@@ -7,14 +7,44 @@
 }
 .wish-list-menu-container > h1 {
   color: white;
+  text-align: center;
   font-size: 4rem;
+  margin: 0;
+}
+.wish-list-menu-container > h2 {
+  color: white;
+  text-align: center;
+  font-size: 2rem;
 }
 .list-name {
   background: #00a9bb;
-  border-radius: 30px;
+  padding: 0 20px 0 20px;
+  display: flex;
+  font-weight: 700;
+  color: #001f36;
+  font-size: 3rem;
+  position: relative;
+  margin-bottom: 2rem;
+}
+.list-area {
+  position: relative;
   padding: 30px;
-  margin-bottom: 30px;
-  font-size: 2rem;
-  border: 3px solid black;
-  box-shadow: 15px 15px 1px #001f36, 15px 15px 1px 2px black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #00a9bb;
+}
+
+.list-name:after,
+.list-area:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  border: 1px solid white;
+  bottom: -4px;
+  left: 4px;
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
 }

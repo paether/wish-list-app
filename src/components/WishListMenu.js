@@ -59,10 +59,13 @@ export default function WishListMenu({
   } else {
     return (
       <div className="wish-list-menu-container">
-        <h1>Welcome to the list:</h1>
+        <h1>Welcome.</h1>
+        <h2>It's time to decide who picks which present!</h2>
         <div className="list-name">{wishList.listName}</div>
-        <AddlistItem wishListId={wishListId} />
-        <ListItems wishListId={wishListId} />
+        <div className="list-area">
+          <ListItems wishListId={wishListId} />
+          <AddlistItem wishListId={wishListId} />
+        </div>
       </div>
     );
   }

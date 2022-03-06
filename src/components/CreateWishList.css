@@ -1,41 +1,65 @@
-.create-wish-list-form {
+.create-wish-list-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  margin-bottom: 10rem;
+}
+.create-wish-list-form {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  align-items: flex-start;
   background: #00a9bb;
   padding: 50px 100px;
   border: 3px solid black;
   box-shadow: 15px 15px 1px #001f36, 15px 15px 1px 2px black;
 }
-.create-wish-list-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+.create-wish-list-headline {
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.create-wish-list-headline > span {
+  color: #ae2012;
+  font-size: 3rem;
+  text-align: center;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
 }
 .create-input {
+  position: relative;
   width: 100%;
-  font-size: 1.3rem;
-  line-height: 1.5rem;
-  margin-bottom: 28px;
+  font-size: 1rem;
+  line-height: 1rem;
   border: none;
-  border-bottom: 5px solid black;
-  background: #00a9bb;
+  background-color: #0059dd;
+  border-radius: 3px;
+  border-bottom: 5px solid transparent;
   min-width: 250px;
   padding-left: 5px;
   outline: none;
   color: black;
+  padding: 5px;
 }
+
 .create-input:focus {
   border-bottom: 5px solid white;
 }
-.create-input:not(:placeholder-shown) {
-  border-bottom: 5px solid #0059dd;
-}
+
 .create-button {
-  display: inline-block;
+  align-self: center;
   text-transform: uppercase;
   font-size: 1.5rem;
+  position: relative;
   padding: 5px 20px;
   display: block;
   color: black;
@@ -46,6 +70,7 @@
   box-shadow: 3px 3px 1px black, 3px 3px 1px 1px black;
   transition: all 0.15s ease-in-out;
 }
+
 .create-button:hover {
   background: white;
   border: 1px solid black;
@@ -53,4 +78,60 @@
 }
 .create-button:active {
   transform: translateY(0rem);
+}
+.tooltip {
+  position: relative;
+  user-select: none;
+}
+.tooltip::before,
+.tooltip::after {
+  left: 50%;
+  opacity: 0;
+  position: absolute;
+  z-index: -100;
+}
+.tooltip:hover::before,
+.tooltip:focus::before,
+.tooltip:hover::after,
+.tooltip:focus::after {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  z-index: 100;
+}
+.tooltip::after {
+  background: #001f36;
+  border: 1px solid black;
+  border-radius: 0.25em;
+  bottom: 120%;
+  color: #edeff0;
+  content: attr(data-tool-tip);
+  margin-left: -8.75em;
+  padding: 1em;
+  transition: all 0.35s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
+  transform: scale(0.6) translateY(50%);
+  width: 17.5em;
+}
+
+.tooltip:hover::after,
+.tooltip:focus::after {
+  transition: all 0.35s cubic-bezier(0.84, -0.18, 0.31, 1.26);
+}
+.input-container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+.fa-circle-question,
+.fa-eye {
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.input-item-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }

@@ -64,7 +64,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header />
+      <Header wishListId={wishListId} />
       <Routes>
         <Route
           path="/"

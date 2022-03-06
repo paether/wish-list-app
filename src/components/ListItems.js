@@ -5,8 +5,8 @@ import {
   updateWishListItemStatus,
   updateWishListStatus,
 } from "../firebase";
-
 import React, { useEffect, useState } from "react";
+import "./ListItems.css";
 
 export default function ListItems({ wishListId }) {
   const [wishListItems, setWishListItems] = useState([]);
@@ -23,6 +23,34 @@ export default function ListItems({ wishListId }) {
 
   return (
     <div className="list-items-container">
+      <div className="list-items">
+        {wishListItems.map((listItem) => {
+          return (
+            <div key={listItem.id} className="list-item">
+              {listItem.name}
+              <button
+                onClick={() => deleteWishListItem(wishListId, listItem.id)}
+              >
+                delete
+              </button>
+              <button
+                onClick={() =>
+                  updateWishListItemName(wishListId, listItem.id, "updated")
+                }
+              >
+                update
+              </button>
+              <button
+                onClick={() =>
+                  updateWishListItemStatus(wishListId, listItem.id, true)
+                }
+              >
+                update
+              </button>
+            </div>
+          );
+        })}
+      </div>
       <button
         onClick={() => navigator.clipboard.writeText(window.location.href)}
       >
@@ -31,30 +59,6 @@ export default function ListItems({ wishListId }) {
       <button onClick={() => updateWishListStatus(wishListId, true)}>
         lock
       </button>
-      {wishListItems.map((listItem) => {
-        return (
-          <div key={listItem.id} className="list-item">
-            {listItem.name}
-            <button onClick={() => deleteWishListItem(wishListId, listItem.id)}>
-              delete
-            </button>
-            <button
-              onClick={() =>
-                updateWishListItemName(wishListId, listItem.id, "updated")
-              }
-            >
-              update
-            </button>
-            <button
-              onClick={() =>
-                updateWishListItemStatus(wishListId, listItem.id, true)
-              }
-            >
-              update
-            </button>
-          </div>
-        );
-      })}
     </div>
   );
 }

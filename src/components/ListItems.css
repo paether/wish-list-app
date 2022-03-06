@@ -1,0 +1,9 @@
+.list-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(2rem, 1fr));
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  grid-gap: 10px;
+}
