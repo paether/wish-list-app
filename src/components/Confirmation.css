@@ -1,0 +1,90 @@
+.confirm-buy-container {
+  z-index: 11;
+  display: flex;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.confirm-buy-window {
+  border-top-left-radius: 20px;
+  background-color: #00a9bb;
+  display: flex;
+  flex-direction: column;
+  padding: 45px;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+.confirm-buy-window:after {
+  z-index: -1;
+  border-top-left-radius: 20px;
+  content: "";
+  position: absolute;
+  border: 1px solid white;
+  bottom: -4px;
+  left: 4px;
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
+}
+.confirm-buy-window > h2 {
+  color: #001f36;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+.confirm-button {
+  align-self: center;
+  text-transform: uppercase;
+  font-size: 1rem;
+  position: relative;
+  padding: 5px 20px;
+  display: block;
+  color: white;
+  font-weight: 700;
+  background: #0059dd;
+  letter-spacing: 2px;
+  outline: none;
+  border: 1px solid black;
+  box-shadow: 3px 3px 1px black, 3px 3px 1px 1px black;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.confirm-button:hover {
+  background: white;
+  border: 1px solid black;
+  transform: translateY(-0.2rem);
+  color: black;
+}
+.confirm-button:active {
+  transform: translateY(0rem);
+}
+.confirm-button-container {
+  display: flex;
+  gap: 20px;
+}
+.confirm-item {
+  background-color: #001f36;
+  cursor: pointer;
+  border: 0 solid #e5e7eb;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1.75rem;
+  padding: 1rem;
+  position: relative;
+  text-align: center;
+  text-decoration: none #000000 solid;
+  text-decoration-thickness: auto;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  border-radius: 5px;
+}

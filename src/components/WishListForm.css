@@ -1,11 +1,4 @@
-.create-wish-list-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin-bottom: 10rem;
-}
-.create-wish-list-form {
+.wish-list-form-container {
   display: flex;
   position: relative;
   flex-direction: column;
@@ -17,52 +10,18 @@
   border: 3px solid black;
   box-shadow: 15px 15px 1px #001f36, 15px 15px 1px 2px black;
 }
-
-.create-wish-list-headline {
-  color: white;
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: 20px;
-}
-.create-wish-list-headline > span {
-  color: #ae2012;
-  font-size: 3rem;
-  text-align: center;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-}
 label {
-  display: block;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
-.create-input {
-  position: relative;
-  width: 100%;
-  font-size: 1rem;
-  line-height: 1rem;
-  border: none;
-  background-color: #0059dd;
-  border-radius: 3px;
-  border-bottom: 5px solid transparent;
-  min-width: 250px;
-  padding-left: 5px;
-  outline: none;
-  color: black;
-  padding: 5px;
-}
-
-.create-input:focus {
-  border-bottom: 5px solid white;
-}
-
-.create-button {
+.submit-button-form {
   align-self: center;
   text-transform: uppercase;
   font-size: 1.5rem;
   position: relative;
   padding: 5px 20px;
   display: block;
-  color: black;
+  color: white;
   background: #0059dd;
   letter-spacing: 2px;
   outline: none;
@@ -71,12 +30,13 @@ label {
   transition: all 0.15s ease-in-out;
 }
 
-.create-button:hover {
+.submit-button-form:hover {
   background: white;
   border: 1px solid black;
   transform: translateY(-0.2rem);
+  color: #001f36;
 }
-.create-button:active {
+.submit-button-form:active {
   transform: translateY(0rem);
 }
 .tooltip {
@@ -129,9 +89,30 @@ label {
   width: 1.2rem;
   height: 1.2rem;
 }
+.fa-eye {
+  cursor: pointer;
+}
 .input-item-container {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+}
+.form-input {
+  position: relative;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1rem;
+  border: none;
+  background-color: #0059dd;
+  border-bottom: 5px solid #001f36;
+  min-width: 250px;
+  padding-left: 5px;
+  outline: none;
+  color: white;
+  padding: 5px;
+}
+
+.form-input:focus {
+  border-bottom: 5px solid white;
 }

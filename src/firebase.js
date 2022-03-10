@@ -89,7 +89,7 @@ export const updateWishListStatus = (wishListId, locked) => {
   );
 };
 
-export const updateWishListItemName = (wishListId, listItemId, name) => {
+const updateWishListItemName = (wishListId, listItemId, name) => {
   const listItemRef = doc(db, "wishLists", wishListId, "items", listItemId);
   return (
     updateDoc(listItemRef, {
@@ -99,37 +99,56 @@ export const updateWishListItemName = (wishListId, listItemId, name) => {
   );
 };
 
-export const updateWishListItemStatus = (wishListId, listItemId, checked) => {
+const updateWishListItemStatus = async (
+  wishListId,
+  listItemId,
+  reserved,
+  bought
+) => {
   const listItemRef = doc(db, "wishLists", wishListId, "items", listItemId);
-  return updateDoc(
-    listItemRef,
-    {
-      checked,
-    },
-    { merge: true }
-  );
+  const listItemDoc = await getDoc(listItemRef);
+
+  if (listItemDoc.data().bought === false) {
+    return updateDoc(
+      listItemRef,
+      {
+        reserved,
+        bought,
+      },
+      { merge: true }
+    );
+  }
 };
 
-export const deleteWishListItem = (wishListId, listItemId) => {
+const deleteWishListItem = (wishListId, listItemId) => {
   const listItemRef = doc(db, "wishLists", wishListId, "items", listItemId);
   return deleteDoc(listItemRef);
 };
 
-const addWishListItem = async (itemName, wishListId, link) => {
+const addWishListItem = async (
+  itemName,
+  itemDesc,
+  wishListId,
+  itemUrl,
+  pictureUrl
+) => {
   const querySnapshot = await getWishListItems(wishListId);
   const wishListItems = querySnapshot.docs;
   const matchingItem = wishListItems.find(
     (wishListItem) =>
-      wishListItem.data().name.toLowerCase() === itemName.toLowerCase()
+      wishListItem.data().itemName.toLowerCase() === itemName.toLowerCase()
   );
   if (!matchingItem) {
     const id = uniqid();
     const itemsColRef = doc(db, "wishLists", wishListId, "items", id);
     return setDoc(itemsColRef, {
       id,
-      checked: false,
-      name: itemName,
-      link,
+      reserved: false,
+      bought: false,
+      itemName,
+      itemDesc,
+      itemUrl,
+      pictureUrl,
       created: serverTimestamp(),
     });
   }
@@ -145,4 +164,7 @@ export {
   addUserWishList,
   addWishListItem,
   getWishLists,
+  deleteWishListItem,
+  updateWishListItemStatus,
+  updateWishListItemName,
 };

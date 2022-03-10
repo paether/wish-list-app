@@ -61,14 +61,10 @@ svg {
   padding: 2.75rem 1.65rem;
   position: relative;
   text-align: center;
-  text-decoration: none #000000 solid;
-  text-decoration-thickness: auto;
   max-width: 460px;
   position: relative;
   transform: rotate(-2deg);
   user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
 }
 
 .home-button:focus {

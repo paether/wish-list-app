@@ -2,12 +2,14 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import * as FireBase from "./firebase";
 import useQueryURL from "./hooks/useQueryURL";
-import CreateWishList from "./components/CreateWishList";
+import CreateWishList from "./pages/CreateWishList";
+import Header from "./pages/Header";
+import Footer from "./pages/Footer";
+import Home from "./pages/Home";
+import Loading from "./pages/Loading";
+import OpenList from "./pages/OpenList";
 import WishListMenu from "./components/WishListMenu";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Home from "./components/Home";
-import Loading from "./components/Loading";
+import uniqid from "uniqid";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -16,17 +18,14 @@ function App() {
   const [wishListId, setWishListId] = useQueryURL("listId");
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsloading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [localAdminSessionId, setLocalAdminSessionId] = useState("");
+  const [localSessionId, setLocalSessionId] = useState("");
 
-  const [storage, setStorage] = useState(
-    JSON.parse(localStorage.getItem("authorizedListIds")) || []
-  );
   const [language, setLanguage] = useState(
     JSON.parse(localStorage.getItem("language")) || "en"
   );
 
-  useEffect(() => {
-    localStorage.setItem("authorizedListIds", JSON.stringify(storage));
-  }, [storage]);
   useEffect(() => {
     localStorage.setItem("language", JSON.stringify(language));
   }, [language]);
@@ -52,15 +51,29 @@ function App() {
     })();
   }, [wishListId, setWishListId]);
 
-  const addListIdToLocalStorage = (listId) => {
-    setStorage((oldStorage) => [...oldStorage, listId]);
+  const addListIdToLocalStorage = (listId, sessionId, adminSessionId) => {
+    let storage = JSON.parse(localStorage.getItem("authorization")) || [];
+    storage = [...storage, { listId, sessionId, adminSessionId }];
+    localStorage.setItem("authorization", JSON.stringify(storage));
   };
 
-  function onWhishListCreation(wishListId) {
+  const updateSessionData = (wishListId, isAdmin) => {
+    let adminSessionId = "";
+    if (isAdmin) {
+      adminSessionId = uniqid();
+      setLocalAdminSessionId(adminSessionId);
+    }
+    const sessionId = uniqid();
+    setLocalSessionId(sessionId);
+    addListIdToLocalStorage(wishListId, sessionId, adminSessionId);
+  };
+
+  const onWhishListCreation = (wishListId) => {
     setWishListId(wishListId, "/wishList");
     setIsAuthorized(true);
-    addListIdToLocalStorage(wishListId);
-  }
+    setIsAdmin(true);
+    updateSessionData(wishListId);
+  };
 
   return (
     <BrowserRouter>
@@ -68,7 +81,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<Home language={language} isLoading={isLoading} />}
+          element={
+            <Home
+              wishListId={wishListId}
+              language={language}
+              isLoading={isLoading}
+            />
+          }
         />
         <Route
           path="/create"
@@ -84,20 +103,25 @@ function App() {
         <Route
           path="/wishList"
           element={
-            wishList && userId ? (
+            wishList && userId && wishListId ? (
               <WishListMenu
-                isLoading={isLoading}
+                localSessionId={localSessionId}
+                updateSessionData={updateSessionData}
+                localAdminSessionId={localAdminSessionId}
                 language={language}
                 wishList={wishList}
                 userId={userId}
                 wishListId={wishListId}
                 isAuthorized={isAuthorized}
                 onSetIsAuthorized={setIsAuthorized}
-                localStorage={storage}
+                isAdmin={isAdmin}
+                onSetIsAdmin={setIsAdmin}
                 onSetLocalStorage={addListIdToLocalStorage}
               />
+            ) : wishListId ? (
+              <Loading isLoading={isLoading} language={language} />
             ) : (
-              <Loading language={language} />
+              <OpenList language={language} />
             )
           }
         />

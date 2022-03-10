@@ -1,15 +1,19 @@
-import {
-  streamWishListItems,
-  updateWishListItemName,
-  deleteWishListItem,
-  updateWishListItemStatus,
-  updateWishListStatus,
-} from "../firebase";
+import { streamWishListItems, updateWishListItemStatus } from "../firebase";
 import React, { useEffect, useState } from "react";
+import Confirmation from "./Confirmation";
 import "./ListItems.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGift } from "@fortawesome/free-solid-svg-icons";
+import AddEditlistItem from "./AddEditListItem";
 
-export default function ListItems({ wishListId }) {
+export default function ListItems({
+  wishListId,
+  isAdmin,
+  localAdminSessionId,
+}) {
   const [wishListItems, setWishListItems] = useState([]);
+  const [confirmationId, setConfirmationId] = useState("");
+  const [editData, setEditData] = useState(null);
 
   useEffect(() => {
     const subscribe = streamWishListItems(wishListId, (querySnapshot) => {
@@ -22,43 +26,127 @@ export default function ListItems({ wishListId }) {
   }, [wishListId, setWishListItems]);
 
   return (
-    <div className="list-items-container">
-      <div className="list-items">
-        {wishListItems.map((listItem) => {
-          return (
-            <div key={listItem.id} className="list-item">
-              {listItem.name}
-              <button
-                onClick={() => deleteWishListItem(wishListId, listItem.id)}
-              >
-                delete
-              </button>
-              <button
-                onClick={() =>
-                  updateWishListItemName(wishListId, listItem.id, "updated")
-                }
-              >
-                update
-              </button>
-              <button
-                onClick={() =>
-                  updateWishListItemStatus(wishListId, listItem.id, true)
-                }
-              >
-                update
-              </button>
-            </div>
-          );
-        })}
-      </div>
-      <button
+    <div className="list-area">
+      <div className="list-items-container">
+        <div className="list-items">
+          {wishListItems.map((listItem) => {
+            return (
+              <div key={listItem.id} className="grid-item-container">
+                {isAdmin && (
+                  <div className="admin-buttons-container">
+                    <button className="select-button">Delete</button>
+                    <button className="select-button">Edit</button>
+                  </div>
+                )}
+                {confirmationId === listItem.id && (
+                  <Confirmation
+                    setConfirmationId={setConfirmationId}
+                    wishListId={wishListId}
+                    listItem={listItem}
+                  />
+                )}
+                {listItem.reserved && (
+                  <span className="label-reserved">Reserved</span>
+                )}
+                {listItem.bought && (
+                  <span className="label-bought">Bought</span>
+                )}
+
+                <div
+                  data-key={listItem.id}
+                  className={
+                    "list-item-container " +
+                    (listItem.reserved || listItem.bought ? "blur" : "")
+                  }
+                >
+                  {listItem.pictureUrl ? (
+                    <img
+                      className="item-picture"
+                      src={listItem.pictureUrl}
+                      alt=""
+                    />
+                  ) : (
+                    <FontAwesomeIcon className="item-picture" icon={faGift} />
+                  )}
+                  <div className="list-item-details">
+                    <div className="list-item-name"> {listItem.itemName}</div>
+                    <a href={listItem.itemUrl} rel="noreferrer" target="_blank">
+                      Link to gift
+                    </a>
+                    <div className="list-item-description">
+                      {listItem.itemDesc}
+                    </div>
+
+                    {/* <button
+                  onClick={() => deleteWishListItem(wishListId, listItem.id)}
+                >
+                  delete
+                </button>
+                <button
+                  onClick={() =>
+                    updateWishListItemName(wishListId, listItem.id, "updated")
+                  }
+                >
+                  update
+                </button>
+                <button
+                  onClick={() =>
+                    updateWishListItemStatus(wishListId, listItem.id, true)
+                  }
+                >
+                  update
+                </button> */}
+                  </div>
+                </div>
+                <div
+                  className={
+                    "item-status-button-container " +
+                    (listItem.bought ? "bought" : "")
+                  }
+                >
+                  <button
+                    className={
+                      "select-button " + (listItem.reserved ? "reserved" : "")
+                    }
+                    onClick={() =>
+                      updateWishListItemStatus(
+                        wishListId,
+                        listItem.id,
+                        !listItem.reserved,
+                        listItem.bought
+                      )
+                    }
+                    disabled={listItem.bought}
+                  >
+                    {listItem.reserved
+                      ? "Unreserve this gift"
+                      : "Reserve this gift"}
+                  </button>
+                  <button
+                    className={
+                      "select-button " + (listItem.bought ? "bought" : "")
+                    }
+                    onClick={() => setConfirmationId(listItem.id)}
+                    disabled={listItem.bought}
+                  >
+                    Buy this gift
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {/* <button
         onClick={() => navigator.clipboard.writeText(window.location.href)}
       >
         copy link
       </button>
-      <button onClick={() => updateWishListStatus(wishListId, true)}>
-        lock
-      </button>
+      */}
+      </div>
+      <div className="admin-toggle"></div>
+      {isAdmin && (
+        <AddEditlistItem wishListId={wishListId} editData={editData} />
+      )}
     </div>
   );
 }

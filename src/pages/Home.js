@@ -2,10 +2,20 @@ import "./Home.css";
 import KUTE from "kute.js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "./Loading";
 
-export default function Home({ isLoading, language }) {
+export default function Home({ isLoading, language, wishListId }) {
   const navigate = useNavigate();
+
+  const handleButtonClick = (path, className) => {
+    const homeHeader = document.querySelector(".header-item.home");
+    const headerElement = document.querySelector(className);
+
+    homeHeader.classList.remove("active");
+    headerElement.classList.add("active");
+
+    navigate(path);
+  };
+
   useEffect(() => {
     const headline = document.querySelector(".headline");
     headline.classList.add("loaded");
@@ -33,16 +43,25 @@ export default function Home({ isLoading, language }) {
       </h1>
       <div className="home-options-container">
         <button
-          onClick={() => navigate("/create")}
+          onClick={() =>
+            handleButtonClick("/create", ".header-item.create-list")
+          }
           className="home-button create"
-          role={{ role: "button" }}
         >
           Create your Wish List
         </button>
 
         <div className="or">Or</div>
 
-        <button className="home-button open" role={{ role: "button" }}>
+        <button
+          onClick={() =>
+            handleButtonClick(
+              wishListId ? `/wishList?listId=${wishListId}` : "/wishList",
+              ".header-item.open-list"
+            )
+          }
+          className="home-button open"
+        >
           Open an existing Wish List
         </button>
       </div>
