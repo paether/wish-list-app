@@ -5,16 +5,15 @@ import { useEffect, useState } from "react";
 import "./WishListMenu.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
-import uniqid from "uniqid";
 let toggleButton;
 
 export default function WishListMenu({
   wishList,
   wishListId,
   isAuthorized,
-  onSetIsAuthorized,
+  setIsAuthorized,
   isAdmin,
-  onSetIsAdmin,
+  setIsAdmin,
   localAdminSessionId,
   localSessionId,
   updateSessionData,
@@ -40,9 +39,9 @@ export default function WishListMenu({
       (element) => element.sessionId === localSessionId
     );
     if (sessionExists) {
-      onSetIsAuthorized(true);
+      setIsAuthorized(true);
       if (sessionExists.adminSessionId === localAdminSessionId) {
-        onSetIsAdmin(true);
+        setIsAdmin(true);
       }
     }
   }, [
@@ -50,27 +49,27 @@ export default function WishListMenu({
     isAuthorized,
     localAdminSessionId,
     localSessionId,
-    onSetIsAdmin,
-    onSetIsAuthorized,
+    setIsAdmin,
+    setIsAuthorized,
   ]);
 
   const checkPasswordAndId = async (e) => {
     e.preventDefault();
     const wishListDoc = await getWishList(wishListId);
     const secretKeyElement = document.getElementById("secret_key");
-    const adminKeyElement = document.getElementById("admin_key");
     let adminAllowed = false;
     if (
       bcrypt.compareSync(secretKeyElement.value, wishListDoc.data().secretKey)
     ) {
       if (toggleButton.checked) {
+        const adminKeyElement = document.getElementById("admin_key");
         if (
           bcrypt.compareSync(
             adminKeyElement.value,
             wishListDoc.data().adminSecretKey
           )
         ) {
-          onSetIsAdmin(true);
+          setIsAdmin(true);
           adminAllowed = true;
         } else {
           adminKeyElement.setCustomValidity(
@@ -80,7 +79,7 @@ export default function WishListMenu({
           return;
         }
       }
-      onSetIsAuthorized(true);
+      setIsAuthorized(true);
       updateSessionData(wishListId, adminAllowed);
     } else {
       secretKeyElement.setCustomValidity("Wish List Password is wrong!");
@@ -104,9 +103,12 @@ export default function WishListMenu({
               <span className="switch-button-label-span">User</span>
             </label>
           </div>
-          <h1>
-            You need to provide a password for <br /> this list to access it.
-          </h1>
+          <div className="not-authorized-headline">
+            <h1>You need to provide a password for:</h1>
+            <div className="access-item">{wishList.listName}</div>
+            <h1>to access it.</h1>
+          </div>
+
           <div className="input-container">
             <label htmlFor="secret_key">Wish List Password</label>
             <div className="input-flex">
@@ -118,6 +120,7 @@ export default function WishListMenu({
                 }}
                 name="secret_key"
                 id="secret_key"
+                autoComplete="password"
               />
               <FontAwesomeIcon
                 onClick={() => handlePasswordVisibility("secret_key")}
@@ -137,6 +140,7 @@ export default function WishListMenu({
                     e.target.setCustomValidity("");
                   }}
                   id="admin_key"
+                  autoComplete="off"
                 />
                 <FontAwesomeIcon
                   onClick={() => handlePasswordVisibility("admin_key")}
@@ -160,9 +164,13 @@ export default function WishListMenu({
       <h2>It's time to pick presents!</h2>
       <div className="list-name">{wishList.listName}</div>
       <ListItems
-        localAdminSessionId={localAdminSessionId}
-        isAdmin={isAdmin}
-        wishListId={wishListId}
+        {...{
+          localAdminSessionId,
+          isAdmin,
+          wishListId,
+          setIsAdmin,
+          updateSessionData,
+        }}
       />
     </div>
   );

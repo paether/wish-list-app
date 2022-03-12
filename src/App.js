@@ -21,6 +21,7 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [localAdminSessionId, setLocalAdminSessionId] = useState("");
   const [localSessionId, setLocalSessionId] = useState("");
+  const [error, setError] = useState(null);
 
   const [language, setLanguage] = useState(
     JSON.parse(localStorage.getItem("language")) || "en"
@@ -38,10 +39,12 @@ function App() {
         setUserId(userCred.user.uid);
         if (wishListId) {
           const returnedWishList = await FireBase.getWishList(wishListId);
-          if (returnedWishList.exists) {
+          if (returnedWishList.data()) {
             setWishList(returnedWishList.data());
           } else {
-            setWishListId();
+            setError(
+              "Cannot load this list. Please make sure the list ID is provided correctly!"
+            );
           }
         }
         setIsloading(false);
@@ -81,22 +84,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={
-            <Home
-              wishListId={wishListId}
-              language={language}
-              isLoading={isLoading}
-            />
-          }
+          element={<Home {...{ wishListId, language, isLoading }} />}
         />
         <Route
           path="/create"
           element={
             <CreateWishList
-              isLoading={isLoading}
-              onCreation={onWhishListCreation}
-              userId={userId}
-              language={language}
+              {...{ isLoading, onWhishListCreation, userId, language }}
             />
           }
         />
@@ -105,23 +99,33 @@ function App() {
           element={
             wishList && userId && wishListId ? (
               <WishListMenu
-                localSessionId={localSessionId}
-                updateSessionData={updateSessionData}
-                localAdminSessionId={localAdminSessionId}
-                language={language}
-                wishList={wishList}
-                userId={userId}
-                wishListId={wishListId}
-                isAuthorized={isAuthorized}
-                onSetIsAuthorized={setIsAuthorized}
-                isAdmin={isAdmin}
-                onSetIsAdmin={setIsAdmin}
-                onSetLocalStorage={addListIdToLocalStorage}
+                {...{
+                  localSessionId,
+                  updateSessionData,
+                  localAdminSessionId,
+                  language,
+                  wishList,
+                  wishListId,
+                  isAuthorized,
+                  setIsAuthorized,
+                  isAdmin,
+                  setIsAdmin,
+                  addListIdToLocalStorage,
+                  isLoading,
+                }}
               />
             ) : wishListId ? (
-              <Loading isLoading={isLoading} language={language} />
+              <Loading {...{ error, language }} />
             ) : (
-              <OpenList language={language} />
+              <OpenList
+                {...{
+                  setIsAdmin,
+                  language,
+                  setIsAuthorized,
+                  updateSessionData,
+                  setWishListId,
+                }}
+              />
             )
           }
         />

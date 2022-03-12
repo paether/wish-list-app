@@ -2,11 +2,22 @@
   display: flex;
   margin-top: auto;
   width: 100%;
-  height: 100px;
-  font-size: 2rem;
+  font-size: 1rem;
   align-items: center;
   justify-content: center;
   text-transform: uppercase;
   background-color: #001220;
   color: white;
+  gap: 20px;
+  padding: 5px;
+}
+.footer-container > a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.github-logo {
+  color: white;
+  width: 1.4rem;
+  height: 1.4rem;
 }

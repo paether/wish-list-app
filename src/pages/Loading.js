@@ -1,7 +1,7 @@
 import language from "../language";
 import "./Loading.css";
 
-export default function Loading({ isLoading }) {
+export default function Loading({ error }) {
   return (
     <div className="loading-container">
       <div className="loading-ring">
@@ -12,7 +12,7 @@ export default function Loading({ isLoading }) {
         <div></div>
       </div>
       {/* <div className="loading-text">{language[props.language].loading}</div> */}
-      {!isLoading && (
+      {error && (
         <div className="loading-error">
           Cannot load this list. Please make sure the list ID is provided
           correctly!

@@ -3,17 +3,64 @@ import React, { useEffect, useState } from "react";
 import Confirmation from "./Confirmation";
 import "./ListItems.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGift } from "@fortawesome/free-solid-svg-icons";
+import { faGift, faEye } from "@fortawesome/free-solid-svg-icons";
 import AddEditlistItem from "./AddEditListItem";
+import bcrypt from "bcryptjs";
+import { getWishList } from "../firebase";
+let toggleButton;
 
 export default function ListItems({
   wishListId,
   isAdmin,
-  localAdminSessionId,
+  setIsAdmin,
+  updateSessionData,
 }) {
   const [wishListItems, setWishListItems] = useState([]);
   const [confirmationId, setConfirmationId] = useState("");
   const [editData, setEditData] = useState(null);
+  const [showAdmin, setShowAdmin] = useState(false);
+
+  const handlePasswordVisibility = (elementId) => {
+    const inputElement = document.getElementById(elementId);
+    inputElement.type === "password"
+      ? (inputElement.type = "text")
+      : (inputElement.type = "password");
+  };
+
+  const checkAdminPassword = async (e) => {
+    e.preventDefault();
+    const wishListDoc = await getWishList(wishListId);
+    const adminKeyElement = document.getElementById("admin_key");
+    if (
+      bcrypt.compareSync(
+        adminKeyElement.value,
+        wishListDoc.data().adminSecretKey
+      )
+    ) {
+      setIsAdmin(true);
+      updateSessionData(wishListId, true);
+      setShowAdmin(false);
+    } else {
+      adminKeyElement.setCustomValidity("Wish List Admin Password is wrong!");
+      adminKeyElement.reportValidity();
+      return;
+    }
+  };
+
+  useEffect(() => {
+    toggleButton = document.querySelector(".switch-button-checkbox");
+    if (isAdmin) {
+      toggleButton.checked = true;
+    }
+    toggleButton.addEventListener("click", () => {
+      if (toggleButton.checked) {
+        setShowAdmin(true);
+      } else {
+        setShowAdmin(false);
+        setIsAdmin(false);
+      }
+    });
+  });
 
   useEffect(() => {
     const subscribe = streamWishListItems(wishListId, (querySnapshot) => {
@@ -27,7 +74,56 @@ export default function ListItems({
 
   return (
     <div className="list-area">
+      <div className="switch-button">
+        <input className="switch-button-checkbox" type="checkbox"></input>
+        <label className="switch-button-label" htmlFor="">
+          <span className="switch-button-label-span">User</span>
+        </label>
+      </div>
       <div className="list-items-container">
+        {showAdmin && (
+          <div className="admin-login-container">
+            <form className="admin-login-window">
+              <h2>
+                Please provide the admin password to switch to admin mode:
+              </h2>
+              <div className="input-container">
+                <label htmlFor="admin_key">Admin password</label>
+                <div className="input-flex">
+                  <input
+                    className="access-input"
+                    type="password"
+                    name="admin_key"
+                    onChange={(e) => {
+                      e.target.setCustomValidity("");
+                    }}
+                    id="admin_key"
+                    autoComplete="off"
+                  />
+                  <FontAwesomeIcon
+                    onClick={() => handlePasswordVisibility("admin_key")}
+                    icon={faEye}
+                  />
+                </div>
+              </div>
+              <div className="access-button-container">
+                <button className="access-button" onClick={checkAdminPassword}>
+                  Access list
+                </button>
+                <button
+                  onClick={() => {
+                    toggleButton.checked = false;
+                    setShowAdmin(false);
+                  }}
+                  className="access-button cancel"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
         <div className="list-items">
           {wishListItems.map((listItem) => {
             return (
