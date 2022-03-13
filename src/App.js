@@ -10,7 +10,7 @@ import Loading from "./pages/Loading";
 import OpenList from "./pages/OpenList";
 import WishListMenu from "./components/WishListMenu";
 import uniqid from "uniqid";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, HashRouter, BrowserRouter } from "react-router-dom";
 
 function App() {
   const [wishList, setWishList] = useState();
@@ -72,7 +72,7 @@ function App() {
   };
 
   const onWhishListCreation = (wishListId) => {
-    setWishListId(wishListId, "/wishList");
+    setWishListId(wishListId, "/wish-list-app/wishList");
     setIsAuthorized(true);
     setIsAdmin(true);
     updateSessionData(wishListId);
@@ -83,11 +83,11 @@ function App() {
       <Header wishListId={wishListId} />
       <Routes>
         <Route
-          path="/"
+          path="/wish-list-app"
           element={<Home {...{ wishListId, language, isLoading }} />}
         />
         <Route
-          path="/create"
+          path="/wish-list-app/create"
           element={
             <CreateWishList
               {...{ isLoading, onWhishListCreation, userId, language }}
@@ -95,7 +95,7 @@ function App() {
           }
         />
         <Route
-          path="/wishList"
+          path="/wish-list-app/wishList"
           element={
             wishList && userId && wishListId ? (
               <WishListMenu

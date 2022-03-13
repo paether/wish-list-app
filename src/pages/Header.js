@@ -19,14 +19,19 @@ export default function Header({ wishListId }) {
       <div className="header-container ">
         <div className="logo">Logo</div>
         <ul>
-          <li onClick={(e) => handleClick(e, "/")} className="header-item home">
+          <li
+            onClick={(e) => handleClick(e, "/wish-list-app")}
+            className="header-item home"
+          >
             Home
           </li>
           <li
             onClick={(e) =>
               handleClick(
                 e,
-                wishListId ? `/wishList?listId=${wishListId}` : "/wishList"
+                wishListId
+                  ? `/wish-list-app/wishList?listId=${wishListId}`
+                  : "/wish-list-app/wishList"
               )
             }
             className="header-item open-list"
@@ -34,13 +39,13 @@ export default function Header({ wishListId }) {
             Open
           </li>
           <li
-            onClick={(e) => handleClick(e, "/create")}
+            onClick={(e) => handleClick(e, "/wish-list-app/create")}
             className="header-item create-list"
           >
             Create
           </li>
           <li
-            onClick={(e) => handleClick(e, "/about")}
+            onClick={(e) => handleClick(e, "/wish-list-app/about")}
             className="header-item about"
           >
             About

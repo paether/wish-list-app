@@ -17,8 +17,18 @@ export default function ListItems({
 }) {
   const [wishListItems, setWishListItems] = useState([]);
   const [confirmationId, setConfirmationId] = useState("");
-  const [editData, setEditData] = useState(null);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+
+  const handleCopytoClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    const copyButton = document.querySelector(".add-new-item-btn.copy");
+    copyButton.classList.add("copied");
+
+    setTimeout(() => {
+      copyButton.classList.remove("copied");
+    }, 2000);
+  };
 
   const handlePasswordVisibility = (elementId) => {
     const inputElement = document.getElementById(elementId);
@@ -80,6 +90,7 @@ export default function ListItems({
           <span className="switch-button-label-span">User</span>
         </label>
       </div>
+
       <div className="list-items-container">
         {showAdmin && (
           <div className="admin-login-container">
@@ -130,8 +141,15 @@ export default function ListItems({
               <div key={listItem.id} className="grid-item-container">
                 {isAdmin && (
                   <div className="admin-buttons-container">
-                    <button className="select-button">Delete</button>
-                    <button className="select-button">Edit</button>
+                    <button
+                      onClick={() => {
+                        setIsDelete(true);
+                        setConfirmationId(listItem.id);
+                      }}
+                      className="select-button"
+                    >
+                      Delete
+                    </button>
                   </div>
                 )}
                 {confirmationId === listItem.id && (
@@ -139,6 +157,7 @@ export default function ListItems({
                     setConfirmationId={setConfirmationId}
                     wishListId={wishListId}
                     listItem={listItem}
+                    isDelete={isDelete}
                   />
                 )}
                 {listItem.reserved && (
@@ -222,7 +241,10 @@ export default function ListItems({
                     className={
                       "select-button " + (listItem.bought ? "bought" : "")
                     }
-                    onClick={() => setConfirmationId(listItem.id)}
+                    onClick={() => {
+                      setIsDelete(false);
+                      setConfirmationId(listItem.id);
+                    }}
                     disabled={listItem.bought}
                   >
                     Buy this gift
@@ -232,17 +254,16 @@ export default function ListItems({
             );
           })}
         </div>
-        {/* <button
-        onClick={() => navigator.clipboard.writeText(window.location.href)}
-      >
-        copy link
-      </button>
-      */}
       </div>
+      <button
+        className="add-new-item-btn copy"
+        data-tool-tip={"Copied!"}
+        onClick={() => handleCopytoClipboard()}
+      >
+        Copy list ID
+      </button>
       <div className="admin-toggle"></div>
-      {isAdmin && (
-        <AddEditlistItem wishListId={wishListId} editData={editData} />
-      )}
+      {isAdmin && <AddEditlistItem wishListId={wishListId} />}
     </div>
   );
 }

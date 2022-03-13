@@ -74,6 +74,11 @@ export default function AddlistItem({ wishListId, editData }) {
     } catch (error) {
       alert(error);
     }
+
+    itemName.value = "";
+    itemUrl.value = "";
+    pictureUrl.value = "";
+    itemDesc.value = "";
   };
 
   return (

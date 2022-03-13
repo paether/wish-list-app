@@ -32,7 +32,7 @@ export default function CreateWishList({
       hashedPassword,
       hashedPasswordAdmin
     );
-    navigate("/wishList");
+    navigate("/wish-list-app/wishList");
     const headerItems = [...document.querySelectorAll(".header-item")];
     headerItems
       .find((item) => item.classList.contains("active"))

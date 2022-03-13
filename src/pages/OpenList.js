@@ -22,14 +22,16 @@ export default function OpenList({
     let adminAllowed = false;
 
     if (listIdInput.value.includes("listId")) {
-      listId = listIdInput.value.match(/(?<=listId=).*/);
+      listId = listIdInput.value.match(/(?<=listId=).*/)[0];
     } else {
       listId = listIdInput.value;
     }
+
     const wishListDoc = await getWishList(listId);
     if (!wishListDoc.data()) {
       listIdInput.setCustomValidity("This Wish List ID does not exist!");
       listIdInput.reportValidity();
+      return;
     }
 
     if (
@@ -53,9 +55,9 @@ export default function OpenList({
           return;
         }
       }
-      navigate(`/wishList?listId=${listId}`);
+      navigate(`/wish-list-app/wishList?listId=${listId}`);
       setIsAuthorized(true);
-      setWishListId(listId, "/wishList");
+      setWishListId(listId, "/wish-list-app/wishList");
       updateSessionData(listId, adminAllowed);
     } else {
       secretKeyElement.setCustomValidity("Wish List Password is wrong!");

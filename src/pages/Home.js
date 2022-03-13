@@ -44,7 +44,10 @@ export default function Home({ isLoading, language, wishListId }) {
       <div className="home-options-container">
         <button
           onClick={() =>
-            handleButtonClick("/create", ".header-item.create-list")
+            handleButtonClick(
+              "/wish-list-app/create",
+              ".header-item.create-list"
+            )
           }
           className="home-button create"
         >
@@ -56,7 +59,9 @@ export default function Home({ isLoading, language, wishListId }) {
         <button
           onClick={() =>
             handleButtonClick(
-              wishListId ? `/wishList?listId=${wishListId}` : "/wishList",
+              wishListId
+                ? `/wish-list-app/wishList?listId=${wishListId}`
+                : "/wish-list-app/wishList",
               ".header-item.open-list"
             )
           }
