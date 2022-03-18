@@ -1,0 +1,122 @@
+.wish-list-form-container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  align-items: flex-start;
+  background: #00a9bb;
+  padding: 50px 100px;
+  border: 3px solid black;
+  box-shadow: 15px 15px 1px #001f36, 15px 15px 1px 2px black;
+}
+.switch-button {
+  align-self: center;
+}
+label {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.submit-button-form {
+  align-self: center;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  position: relative;
+  padding: 5px 20px;
+  display: block;
+  color: white;
+  background: #0059dd;
+  letter-spacing: 2px;
+  outline: none;
+  border: 1px solid black;
+  box-shadow: 3px 3px 1px black, 3px 3px 1px 1px black;
+  transition: all 0.15s ease-in-out;
+}
+
+.submit-button-form:hover {
+  background: white;
+  border: 1px solid black;
+  transform: translateY(-0.2rem);
+  color: #001f36;
+}
+.submit-button-form:active {
+  transform: translateY(0rem);
+}
+.tooltip {
+  position: relative;
+  user-select: none;
+}
+.tooltip::before,
+.tooltip::after {
+  left: 50%;
+  opacity: 0;
+  position: absolute;
+  z-index: -100;
+}
+.tooltip:hover::before,
+.tooltip:focus::before,
+.tooltip:hover::after,
+.tooltip:focus::after {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  z-index: 100;
+}
+.tooltip::after {
+  background: #001f36;
+  border: 1px solid black;
+  border-radius: 0.25em;
+  bottom: 120%;
+  color: #edeff0;
+  content: attr(data-tool-tip);
+  margin-left: -8.75em;
+  padding: 1em;
+  transition: all 0.35s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
+  transform: scale(0.6) translateY(50%);
+  width: 17.5em;
+}
+
+.tooltip:hover::after,
+.tooltip:focus::after {
+  transition: all 0.35s cubic-bezier(0.84, -0.18, 0.31, 1.26);
+}
+.input-container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+.fa-circle-question,
+.fa-eye {
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.fa-eye {
+  cursor: pointer;
+}
+.input-item-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.form-input {
+  position: relative;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1rem;
+  border: none;
+  background-color: #0059dd;
+  border-bottom: 5px solid #001f36;
+  min-width: 250px;
+  padding-left: 5px;
+  outline: none;
+  color: white;
+  padding: 5px;
+}
+
+.form-input:focus {
+  border-bottom: 5px solid white;
+}
