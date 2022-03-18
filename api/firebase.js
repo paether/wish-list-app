@@ -1,6 +1,8 @@
-import { initializeApp } from "firebase/app";
-import uniqid from "uniqid";
-import {
+const dotenv = require("dotenv");
+dotenv.config();
+
+const { initializeApp } = require("firebase/app");
+const {
   getFirestore,
   query,
   orderBy,
@@ -15,8 +17,8 @@ import {
   serverTimestamp,
   arrayUnion,
   deleteDoc,
-} from "firebase/firestore";
-import { getAuth, signInAnonymously } from "firebase/auth";
+} = require("firebase/firestore");
+const { getAuth, signInAnonymously } = require("firebase/auth");
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -31,9 +33,16 @@ const authenticateAnonymously = () => {
   return signInAnonymously(getAuth(app));
 };
 
-const createWishList = (userId, whishListName, secretKey, adminSecretKey) => {
+const createWishList = (
+  id,
+  userId,
+  whishListName,
+  secretKey,
+  adminSecretKey
+) => {
   const wishListRefCol = collection(db, "wishLists");
   return addDoc(wishListRefCol, {
+    id,
     created: serverTimestamp(),
     locked: false,
     secretKey,
@@ -78,7 +87,7 @@ const addUserWishList = (wishListId, userId) => {
   });
 };
 
-export const updateWishListStatus = (wishListId, locked) => {
+const updateWishListStatus = (wishListId, locked) => {
   const wishListRefDoc = doc(db, "wishLists", wishListId);
   return updateDoc(
     wishListRefDoc,
@@ -155,7 +164,7 @@ const addWishListItem = async (
   throw new Error("duplicate-item-error");
 };
 
-export {
+module.exports = {
   authenticateAnonymously,
   createWishList,
   getWishList,
@@ -167,4 +176,5 @@ export {
   deleteWishListItem,
   updateWishListItemStatus,
   updateWishListItemName,
+  updateWishListStatus,
 };

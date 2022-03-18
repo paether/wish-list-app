@@ -21,7 +21,7 @@ export default function Header({ wishListId }) {
         <ul>
           <li
             onClick={(e) => handleClick(e, "/wish-list-app")}
-            className="header-item home"
+            className="header-item home active"
           >
             Home
           </li>
