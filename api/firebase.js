@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
 dotenv.config();
+const { v4: uuidv4 } = require("uuid");
 
 const { initializeApp } = require("firebase/app");
 const {
@@ -33,27 +34,15 @@ const authenticateAnonymously = () => {
   return signInAnonymously(getAuth(app));
 };
 
-const createWishList = (
-  id,
-  userId,
-  whishListName,
-  secretKey,
-  adminSecretKey
-) => {
+const createWishList = (userId, whishListName, secretKey, adminSecretKey) => {
   const wishListRefCol = collection(db, "wishLists");
   return addDoc(wishListRefCol, {
-    id,
     created: serverTimestamp(),
     locked: false,
     secretKey,
     adminSecretKey,
     listName: whishListName,
     createdBy: userId,
-    users: [
-      {
-        userId: userId,
-      },
-    ],
   });
 };
 
@@ -141,27 +130,26 @@ const addWishListItem = async (
   itemUrl,
   pictureUrl
 ) => {
-  const querySnapshot = await getWishListItems(wishListId);
-  const wishListItems = querySnapshot.docs;
-  const matchingItem = wishListItems.find(
-    (wishListItem) =>
-      wishListItem.data().itemName.toLowerCase() === itemName.toLowerCase()
-  );
-  if (!matchingItem) {
-    const id = uniqid();
-    const itemsColRef = doc(db, "wishLists", wishListId, "items", id);
-    return setDoc(itemsColRef, {
-      id,
-      reserved: false,
-      bought: false,
-      itemName,
-      itemDesc,
-      itemUrl,
-      pictureUrl,
-      created: serverTimestamp(),
-    });
-  }
-  throw new Error("duplicate-item-error");
+  // const querySnapshot = await getWishListItems(wishListId);
+  // const wishListItems = querySnapshot.docs;
+  // const matchingItem = wishListItems.find(
+  //   (wishListItem) =>
+  //     wishListItem.data().itemName.toLowerCase() === itemName.toLowerCase()
+  // );
+  // if (!matchingItem) {
+  const id = uuidv4();
+  const itemsColRef = doc(db, "wishLists", wishListId, "items", id);
+  return setDoc(itemsColRef, {
+    id,
+    reserved: false,
+    bought: false,
+    itemName,
+    itemDesc,
+    itemUrl,
+    pictureUrl,
+    created: serverTimestamp(),
+  });
+  // }
 };
 
 module.exports = {

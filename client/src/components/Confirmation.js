@@ -1,15 +1,14 @@
 import { useEffect } from "react";
-import { updateWishListItemStatus, deleteWishListItem } from "../firebase";
 import "./Confirmation.css";
 
 export default function Confirmation(props) {
   const handleBuyConfirmation = () => {
-    updateWishListItemStatus(props.wishListId, props.listItem.id, false, true);
+    // updateWishListItemStatus(props.wishListId, props.listItem.id, false, true);
     props.setConfirmationId(null);
   };
 
   const handleDelete = () => {
-    deleteWishListItem(props.wishListId, props.listItem.id);
+    // deleteWishListItem(props.wishListId, props.listItem.id);
     props.setConfirmationId(null);
   };
 

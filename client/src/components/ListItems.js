@@ -1,12 +1,10 @@
-import { streamWishListItems, updateWishListItemStatus } from "../firebase";
 import React, { useEffect, useState } from "react";
 import Confirmation from "./Confirmation";
 import "./ListItems.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift, faEye } from "@fortawesome/free-solid-svg-icons";
 import AddEditlistItem from "./AddEditListItem";
-import bcrypt from "bcryptjs";
-import { getWishList } from "../firebase";
+import axios from "axios";
 let toggleButton;
 
 export default function ListItems({
@@ -37,25 +35,25 @@ export default function ListItems({
       : (inputElement.type = "password");
   };
 
-  const checkAdminPassword = async (e) => {
-    e.preventDefault();
-    const wishListDoc = await getWishList(wishListId);
-    const adminKeyElement = document.getElementById("admin_key");
-    if (
-      bcrypt.compareSync(
-        adminKeyElement.value,
-        wishListDoc.data().adminSecretKey
-      )
-    ) {
-      setIsAdmin(true);
-      updateSessionData(wishListId, true);
-      setShowAdmin(false);
-    } else {
-      adminKeyElement.setCustomValidity("Wish List Admin Password is wrong!");
-      adminKeyElement.reportValidity();
-      return;
-    }
-  };
+  // const checkAdminPassword = async (e) => {
+  //   e.preventDefault();
+  //   const wishListDoc = await getWishList(wishListId);
+  //   const adminKeyElement = document.getElementById("admin_key");
+  //   if (
+  //     bcrypt.compareSync(
+  //       adminKeyElement.value,
+  //       wishListDoc.data().adminSecretKey
+  //     )
+  //   ) {
+  //     setIsAdmin(true);
+  //     updateSessionData(wishListId, true);
+  //     setShowAdmin(false);
+  //   } else {
+  //     adminKeyElement.setCustomValidity("Wish List Admin Password is wrong!");
+  //     adminKeyElement.reportValidity();
+  //     return;
+  //   }
+  // };
 
   useEffect(() => {
     toggleButton = document.querySelector(".switch-button-checkbox");
@@ -71,16 +69,29 @@ export default function ListItems({
       }
     });
   });
-
   useEffect(() => {
-    const subscribe = streamWishListItems(wishListId, (querySnapshot) => {
-      const updatedWishListItems = querySnapshot.docs.map((docSnapshot) => {
-        return docSnapshot.data();
-      });
-      setWishListItems(updatedWishListItems);
-    });
-    return subscribe;
-  }, [wishListId, setWishListItems]);
+    (async function fetchData() {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8800/api/wishList/subscribe/" + wishListId,
+        {
+          headers: {
+            token: "Bearer " + token,
+          },
+        }
+      );
+      setWishListItems(response.data);
+    })();
+  }, [setWishListItems, wishListItems, wishListId]);
+  // useEffect(() => {
+  //   const subscribe = streamWishListItems(wishListId, (querySnapshot) => {
+  //     const updatedWishListItems = querySnapshot.docs.map((docSnapshot) => {
+  //       return docSnapshot.data();
+  //     });
+  //     setWishListItems(updatedWishListItems);
+  //   });
+  //   return subscribe;
+  // }, [wishListId, setWishListItems]);
 
   return (
     <div className="list-area">
@@ -118,9 +129,9 @@ export default function ListItems({
                 </div>
               </div>
               <div className="access-button-container">
-                <button className="access-button" onClick={checkAdminPassword}>
+                {/* <button className="access-button" onClick={checkAdminPassword}>
                   Access list
-                </button>
+                </button> */}
                 <button
                   onClick={() => {
                     toggleButton.checked = false;
@@ -223,14 +234,14 @@ export default function ListItems({
                     className={
                       "select-button " + (listItem.reserved ? "reserved" : "")
                     }
-                    onClick={() =>
-                      updateWishListItemStatus(
-                        wishListId,
-                        listItem.id,
-                        !listItem.reserved,
-                        listItem.bought
-                      )
-                    }
+                    // onClick={() =>
+                    //   updateWishListItemStatus(
+                    //     wishListId,
+                    //     listItem.id,
+                    //     !listItem.reserved,
+                    //     listItem.bought
+                    //   )
+                    // }
                     disabled={listItem.bought}
                   >
                     {listItem.reserved

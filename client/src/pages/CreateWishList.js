@@ -1,45 +1,68 @@
 import React from "react";
 import Loading from "./Loading";
 import bcrypt from "bcryptjs";
-import { createWishList as createWishListFirebase } from "../firebase";
 import "./CreateWishList.css";
 import { useNavigate } from "react-router-dom";
 import WishListForm from "../components/WishListForm";
+import axios from "axios";
 
 export default function CreateWishList({
   onWhishListCreation,
-  userId,
   isLoading,
   language,
 }) {
   const navigate = useNavigate();
 
-  const createWishList = async (e) => {
-    e.preventDefault();
+  const displayError = (element, text) => {
+    element.setCustomValidity(text);
+    element.reportValidity();
+  };
 
-    const listName = document.getElementById("list_id_name").value;
-    const hashedPassword = bcrypt.hashSync(
-      document.getElementById("secret_key").value,
-      bcrypt.genSaltSync()
-    );
-    const hashedPasswordAdmin = bcrypt.hashSync(
-      document.getElementById("admin_key").value,
-      bcrypt.genSaltSync()
-    );
-    const docref = await createWishListFirebase(
-      userId,
-      listName,
-      hashedPassword,
-      hashedPasswordAdmin
-    );
-    navigate("/wish-list-app/wishList");
+  const setActiveHeader = (headerClass) => {
     const headerItems = [...document.querySelectorAll(".header-item")];
     headerItems
       .find((item) => item.classList.contains("active"))
       ?.classList.remove("active");
-    const openHeaderItem = document.querySelector(".open-list");
+    const openHeaderItem = document.querySelector(headerClass);
     openHeaderItem.classList.add("active");
-    onWhishListCreation(docref.id);
+  };
+
+  const createWishList = async (e) => {
+    e.preventDefault();
+
+    const listName = document.getElementById("list_id_name");
+    const password = document.getElementById("secret_key");
+    const adminpassword = document.getElementById("admin_key");
+
+    if (listName.validity.valueMissing) {
+      displayError(listName, "You need to provide a Wish List name!");
+      return;
+    }
+    if (password.validity.valueMissing) {
+      displayError(password, "You need to provide a password!");
+      return;
+    }
+    if (adminpassword.validity.valueMissing) {
+      displayError(adminpassword, "You need to provide an admin password!");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8800/api/auth/create",
+        {
+          listName: listName.value,
+          password: password.value,
+          adminPassword: adminpassword.value,
+        }
+      );
+      navigate("/wish-list-app/wishList");
+      setActiveHeader(".open-list");
+      console.log("Bearer " + response.data.token);
+      onWhishListCreation(response.data.listId, response.data.token);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

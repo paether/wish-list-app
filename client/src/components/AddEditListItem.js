@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { addWishListItem } from "../firebase";
 import "./AddEditListItem.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -64,13 +63,13 @@ export default function AddlistItem({ wishListId, editData }) {
       return;
     }
     try {
-      await addWishListItem(
-        itemName.value,
-        itemDesc.value,
-        wishListId,
-        itemUrl.value,
-        pictureUrl.value
-      );
+      // await addWishListItem(
+      //   itemName.value,
+      //   itemDesc.value,
+      //   wishListId,
+      //   itemUrl.value,
+      //   pictureUrl.value
+      // );
     } catch (error) {
       alert(error);
     }

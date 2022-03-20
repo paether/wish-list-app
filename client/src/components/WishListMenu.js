@@ -1,24 +1,38 @@
 import ListItems from "./ListItems";
 import bcrypt from "bcryptjs";
-import { getWishList } from "../firebase";
 import { useEffect, useState } from "react";
 import "./WishListMenu.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 let toggleButton;
-
+let listName;
 export default function WishListMenu({
-  wishList,
   wishListId,
   isAuthorized,
   setIsAuthorized,
   isAdmin,
   setIsAdmin,
-  localAdminSessionId,
-  localSessionId,
-  updateSessionData,
 }) {
   const [showAdmin, setShowAdmin] = useState(false);
+
+  const getListName = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        "http://localhost:8800/api/wishList/" + wishListId,
+        {
+          headers: {
+            token: "Bearer " + token,
+          },
+        }
+      );
+      listName = response.data;
+    } catch (error) {
+      console.log("cannot get listname");
+    }
+  };
+  getListName();
 
   useEffect(() => {
     if (!isAuthorized) {
@@ -31,61 +45,41 @@ export default function WishListMenu({
         }
       });
     }
+  }, [showAdmin, isAuthorized]);
 
-    if (isAdmin || isAuthorized) return;
-
-    let storage = JSON.parse(localStorage.getItem("authorization")) || [];
-    const sessionExists = storage.find(
-      (element) => element.sessionId === localSessionId
-    );
-    if (sessionExists) {
-      setIsAuthorized(true);
-      if (sessionExists.adminSessionId === localAdminSessionId) {
-        setIsAdmin(true);
-      }
-    }
-  }, [
-    isAdmin,
-    isAuthorized,
-    localAdminSessionId,
-    localSessionId,
-    setIsAdmin,
-    setIsAuthorized,
-  ]);
-
-  const checkPasswordAndId = async (e) => {
-    e.preventDefault();
-    const wishListDoc = await getWishList(wishListId);
-    const secretKeyElement = document.getElementById("secret_key");
-    let adminAllowed = false;
-    if (
-      bcrypt.compareSync(secretKeyElement.value, wishListDoc.data().secretKey)
-    ) {
-      if (toggleButton.checked) {
-        const adminKeyElement = document.getElementById("admin_key");
-        if (
-          bcrypt.compareSync(
-            adminKeyElement.value,
-            wishListDoc.data().adminSecretKey
-          )
-        ) {
-          setIsAdmin(true);
-          adminAllowed = true;
-        } else {
-          adminKeyElement.setCustomValidity(
-            "Wish List Admin Password is wrong!"
-          );
-          adminKeyElement.reportValidity();
-          return;
-        }
-      }
-      setIsAuthorized(true);
-      updateSessionData(wishListId, adminAllowed);
-    } else {
-      secretKeyElement.setCustomValidity("Wish List Password is wrong!");
-      secretKeyElement.reportValidity();
-    }
-  };
+  // const checkPasswordAndId = async (e) => {
+  //   e.preventDefault();
+  //   const wishListDoc = await getWishList(wishListId);
+  //   const secretKeyElement = document.getElementById("secret_key");
+  //   let adminAllowed = false;
+  //   if (
+  //     bcrypt.compareSync(secretKeyElement.value, wishListDoc.data().secretKey)
+  //   ) {
+  //     if (toggleButton.checked) {
+  //       const adminKeyElement = document.getElementById("admin_key");
+  //       if (
+  //         bcrypt.compareSync(
+  //           adminKeyElement.value,
+  //           wishListDoc.data().adminSecretKey
+  //         )
+  //       ) {
+  //         setIsAdmin(true);
+  //         adminAllowed = true;
+  //       } else {
+  //         adminKeyElement.setCustomValidity(
+  //           "Wish List Admin Password is wrong!"
+  //         );
+  //         adminKeyElement.reportValidity();
+  //         return;
+  //       }
+  //     }
+  //     setIsAuthorized(true);
+  //     updateSessionData(wishListId, adminAllowed);
+  //   } else {
+  //     secretKeyElement.setCustomValidity("Wish List Password is wrong!");
+  //     secretKeyElement.reportValidity();
+  //   }
+  // };
   const handlePasswordVisibility = (elementId) => {
     const inputElement = document.getElementById(elementId);
     inputElement.type === "password"
@@ -104,9 +98,9 @@ export default function WishListMenu({
             </label>
           </div>
           <div className="not-authorized-headline">
-            <h1>You need to provide a password for:</h1>
-            <div className="access-item">{wishList.listName}</div>
-            <h1>to access it.</h1>
+            <h1>You need to provide a password to access this list</h1>
+            {/* <div className="access-item">{listName}</div>
+            <h1>to access it.</h1> */}
           </div>
 
           <div className="input-container">
@@ -150,9 +144,9 @@ export default function WishListMenu({
             </div>
           )}
 
-          <button className="access-button" onClick={checkPasswordAndId}>
+          {/* <button className="access-button" onClick={checkPasswordAndId}>
             Access list
-          </button>
+          </button> */}
         </form>
       </div>
     );
@@ -162,14 +156,14 @@ export default function WishListMenu({
     <div className="wish-list-menu-container">
       <h1>Welcome.</h1>
       <h2>It's time to pick presents!</h2>
-      <div className="list-name">{wishList.listName}</div>
+      <div className="list-name">{listName}</div>
       <ListItems
         {...{
-          localAdminSessionId,
+          // localAdminSessionId,
           isAdmin,
           wishListId,
           setIsAdmin,
-          updateSessionData,
+          // updateSessionData,
         }}
       />
     </div>
