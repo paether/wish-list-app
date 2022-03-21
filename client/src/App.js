@@ -9,18 +9,17 @@ import Loading from "./pages/Loading";
 import OpenList from "./pages/OpenList";
 import WishListMenu from "./components/WishListMenu";
 import axios from "axios";
-import { Routes, Route, HashRouter, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 let listName;
 
 function App() {
-  // const [wishList, setWishList] = useState();
-  //const [userId, setUserId] = useState();
-  const [wishListId, setWishListId] = useQueryURL("listId");
+  //const [wishListId, setWishListId] = useQueryURL("listId");
+  const [wishListId, setWishListId] = useState(
+    new URLSearchParams(window.location.search).get("listId")
+  );
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  // const [localAdminSessionId, setLocalAdminSessionId] = useState("");
-  // const [localSessionId, setLocalSessionId] = useState("");
   const [error, setError] = useState(null);
 
   const [language, setLanguage] = useState(
@@ -31,33 +30,14 @@ function App() {
     localStorage.setItem("language", JSON.stringify(language));
   }, [language]);
 
-  useEffect(() => {
-    (async function fetchData() {})();
-  }, [wishListId, setWishListId]);
-
-  // const addListIdToLocalStorage = (listId, sessionId, adminSessionId) => {
-  //   let storage = JSON.parse(localStorage.getItem("authorization")) || [];
-  //   storage = [...storage, { listId, sessionId, adminSessionId }];
-  //   localStorage.setItem("authorization", JSON.stringify(storage));
-  // };
-
-  // const updateSessionData = (wishListId, isAdmin) => {
-  //   let adminSessionId = "";
-  //   if (isAdmin) {
-  //     adminSessionId = uniqid();
-  //     setLocalAdminSessionId(adminSessionId);
-  //   }
-  //   const sessionId = uniqid();
-  //   setLocalSessionId(sessionId);
-  //   addListIdToLocalStorage(wishListId, sessionId, adminSessionId);
-  // };
-
-  const onWhishListCreation = async (wishListId, token) => {
+  const onWhishListCreation = (wishListId, token) => {
     setIsloading(true);
     localStorage.setItem("token", token);
-    setWishListId(wishListId, "/wish-list-app/wishList");
+    ///setWishListId(wishListId, "/wish-list-app/wishList");
+    setWishListId(wishListId);
     setIsAuthorized(true);
-    setIsAdmin(true, setIsloading(false));
+    setIsAdmin(true);
+    setIsloading(false);
   };
 
   return (
@@ -77,20 +57,15 @@ function App() {
         <Route
           path="/wish-list-app/wishList"
           element={
-            wishListId !== null ? (
+            wishListId && !isLoading ? (
               <WishListMenu
                 {...{
-                  // localSessionId,
-                  // updateSessionData,
-                  // localAdminSessionId,
                   language,
-                  //  wishList,
                   wishListId,
                   isAuthorized,
                   setIsAuthorized,
                   isAdmin,
                   setIsAdmin,
-                  //  addListIdToLocalStorage,
                   isLoading,
                 }}
               />
@@ -101,9 +76,7 @@ function App() {
                 {...{
                   setIsAdmin,
                   language,
-                  // wishList,
                   setIsAuthorized,
-                  // updateSessionData,
                   setWishListId,
                 }}
               />

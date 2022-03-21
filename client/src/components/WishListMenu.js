@@ -1,12 +1,11 @@
 import ListItems from "./ListItems";
-import bcrypt from "bcryptjs";
 import { useEffect, useState } from "react";
 import "./WishListMenu.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 let toggleButton;
-let listName;
+let listName = "";
 export default function WishListMenu({
   wishListId,
   isAuthorized,
@@ -32,7 +31,10 @@ export default function WishListMenu({
       console.log("cannot get listname");
     }
   };
-  getListName();
+
+  if (!listName) {
+    getListName();
+  }
 
   useEffect(() => {
     if (!isAuthorized) {
@@ -47,39 +49,51 @@ export default function WishListMenu({
     }
   }, [showAdmin, isAuthorized]);
 
-  // const checkPasswordAndId = async (e) => {
-  //   e.preventDefault();
-  //   const wishListDoc = await getWishList(wishListId);
-  //   const secretKeyElement = document.getElementById("secret_key");
-  //   let adminAllowed = false;
-  //   if (
-  //     bcrypt.compareSync(secretKeyElement.value, wishListDoc.data().secretKey)
-  //   ) {
-  //     if (toggleButton.checked) {
-  //       const adminKeyElement = document.getElementById("admin_key");
-  //       if (
-  //         bcrypt.compareSync(
-  //           adminKeyElement.value,
-  //           wishListDoc.data().adminSecretKey
-  //         )
-  //       ) {
-  //         setIsAdmin(true);
-  //         adminAllowed = true;
-  //       } else {
-  //         adminKeyElement.setCustomValidity(
-  //           "Wish List Admin Password is wrong!"
-  //         );
-  //         adminKeyElement.reportValidity();
-  //         return;
-  //       }
-  //     }
-  //     setIsAuthorized(true);
-  //     updateSessionData(wishListId, adminAllowed);
-  //   } else {
-  //     secretKeyElement.setCustomValidity("Wish List Password is wrong!");
-  //     secretKeyElement.reportValidity();
-  //   }
-  // };
+  const displayError = (element, text) => {
+    element.setCustomValidity(text);
+    element.reportValidity();
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    let adminKeyElementValue = "";
+    const secretKeyElement = document.getElementById("secret_key");
+
+    if (secretKeyElement.validity.valueMissing) {
+      displayError(listName, "You need to provide a password!");
+      return;
+    }
+
+    if (toggleButton.checked) {
+      let adminKeyElement = document.getElementById("admin_key");
+
+      if (adminKeyElement.validity.valueMissing) {
+        displayError(listName, "You need to provide an admin password!");
+        return;
+      }
+      adminKeyElementValue = adminKeyElement.value;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8800/api/auth/login",
+        {
+          listId: wishListId,
+          password: secretKeyElement.value,
+          adminPassword: adminKeyElementValue,
+          isAdmin: adminKeyElementValue,
+        }
+      );
+      if (adminKeyElementValue) {
+        setIsAdmin(true);
+      }
+      setIsAuthorized(true);
+      listName = response.data.listName;
+      localStorage.setItem("token", response.data.token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handlePasswordVisibility = (elementId) => {
     const inputElement = document.getElementById(elementId);
     inputElement.type === "password"
@@ -115,6 +129,7 @@ export default function WishListMenu({
                 name="secret_key"
                 id="secret_key"
                 autoComplete="password"
+                required
               />
               <FontAwesomeIcon
                 onClick={() => handlePasswordVisibility("secret_key")}
@@ -135,6 +150,7 @@ export default function WishListMenu({
                   }}
                   id="admin_key"
                   autoComplete="off"
+                  required
                 />
                 <FontAwesomeIcon
                   onClick={() => handlePasswordVisibility("admin_key")}
@@ -144,9 +160,9 @@ export default function WishListMenu({
             </div>
           )}
 
-          {/* <button className="access-button" onClick={checkPasswordAndId}>
+          <button className="access-button" onClick={handleLogin}>
             Access list
-          </button> */}
+          </button>
         </form>
       </div>
     );
@@ -157,15 +173,17 @@ export default function WishListMenu({
       <h1>Welcome.</h1>
       <h2>It's time to pick presents!</h2>
       <div className="list-name">{listName}</div>
-      <ListItems
-        {...{
-          // localAdminSessionId,
-          isAdmin,
-          wishListId,
-          setIsAdmin,
-          // updateSessionData,
-        }}
-      />
+      {isAuthorized && (
+        <ListItems
+          {...{
+            // localAdminSessionId,
+            isAdmin,
+            wishListId,
+            setIsAdmin,
+            // updateSessionData,
+          }}
+        />
+      )}
     </div>
   );
 }

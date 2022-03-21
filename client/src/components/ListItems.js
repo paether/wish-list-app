@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import Confirmation from "./Confirmation";
 import "./ListItems.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift, faEye } from "@fortawesome/free-solid-svg-icons";
 import AddEditlistItem from "./AddEditListItem";
 import axios from "axios";
+import { io } from "socket.io-client";
 let toggleButton;
 
-export default function ListItems({
-  wishListId,
-  isAdmin,
-  setIsAdmin,
-  updateSessionData,
-}) {
+export default function ListItems({ wishListId, isAdmin, setIsAdmin }) {
   const [wishListItems, setWishListItems] = useState([]);
   const [confirmationId, setConfirmationId] = useState("");
   const [showAdmin, setShowAdmin] = useState(false);
@@ -28,6 +24,11 @@ export default function ListItems({
     }, 2000);
   };
 
+  const displayError = (element, text) => {
+    element.setCustomValidity(text);
+    element.reportValidity();
+  };
+
   const handlePasswordVisibility = (elementId) => {
     const inputElement = document.getElementById(elementId);
     inputElement.type === "password"
@@ -35,25 +36,33 @@ export default function ListItems({
       : (inputElement.type = "password");
   };
 
-  // const checkAdminPassword = async (e) => {
-  //   e.preventDefault();
-  //   const wishListDoc = await getWishList(wishListId);
-  //   const adminKeyElement = document.getElementById("admin_key");
-  //   if (
-  //     bcrypt.compareSync(
-  //       adminKeyElement.value,
-  //       wishListDoc.data().adminSecretKey
-  //     )
-  //   ) {
-  //     setIsAdmin(true);
-  //     updateSessionData(wishListId, true);
-  //     setShowAdmin(false);
-  //   } else {
-  //     adminKeyElement.setCustomValidity("Wish List Admin Password is wrong!");
-  //     adminKeyElement.reportValidity();
-  //     return;
-  //   }
-  // };
+  const checkAdminPassword = async (e) => {
+    e.preventDefault();
+
+    const adminKeyElement = document.getElementById("admin_key");
+    if (adminKeyElement.validity.valueMissing) {
+      displayError(adminKeyElement, "You need to provide an admin password!");
+      return;
+    }
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8800/api/auth/adminlogin/" + wishListId,
+        {
+          headers: {
+            token: "Bearer " + token,
+          },
+          adminPassword: adminKeyElement.value,
+        }
+      );
+      localStorage.setItem("token", response.data.token);
+      setIsAdmin(true);
+      setShowAdmin(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     toggleButton = document.querySelector(".switch-button-checkbox");
@@ -69,29 +78,27 @@ export default function ListItems({
       }
     });
   });
+
+  const fetchItems = useCallback(() => {
+    console.log("subscribe");
+    const token = localStorage.getItem("token");
+    const socket = io("http://localhost:8800", {
+      auth: { token },
+      query: {
+        wishListId: wishListId,
+      },
+    });
+
+    socket.on("message", (msg) => {
+      setWishListItems(msg);
+    });
+  }, [wishListId]);
+
   useEffect(() => {
-    (async function fetchData() {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "http://localhost:8800/api/wishList/subscribe/" + wishListId,
-        {
-          headers: {
-            token: "Bearer " + token,
-          },
-        }
-      );
-      setWishListItems(response.data);
-    })();
-  }, [setWishListItems, wishListItems, wishListId]);
-  // useEffect(() => {
-  //   const subscribe = streamWishListItems(wishListId, (querySnapshot) => {
-  //     const updatedWishListItems = querySnapshot.docs.map((docSnapshot) => {
-  //       return docSnapshot.data();
-  //     });
-  //     setWishListItems(updatedWishListItems);
-  //   });
-  //   return subscribe;
-  // }, [wishListId, setWishListItems]);
+    fetchItems();
+
+    return fetchItems();
+  }, [fetchItems]);
 
   return (
     <div className="list-area">
@@ -129,9 +136,9 @@ export default function ListItems({
                 </div>
               </div>
               <div className="access-button-container">
-                {/* <button className="access-button" onClick={checkAdminPassword}>
+                <button className="access-button" onClick={checkAdminPassword}>
                   Access list
-                </button> */}
+                </button>
                 <button
                   onClick={() => {
                     toggleButton.checked = false;

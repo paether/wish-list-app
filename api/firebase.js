@@ -34,6 +34,10 @@ const authenticateAnonymously = () => {
   return signInAnonymously(getAuth(app));
 };
 
+const getDb = () => {
+  return getFirestore(app);
+};
+
 const createWishList = (userId, whishListName, secretKey, adminSecretKey) => {
   const wishListRefCol = collection(db, "wishLists");
   return addDoc(wishListRefCol, {
@@ -165,4 +169,5 @@ module.exports = {
   updateWishListItemStatus,
   updateWishListItemName,
   updateWishListStatus,
+  getDb,
 };

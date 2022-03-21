@@ -4,7 +4,6 @@ dotenv.config();
 
 const verify = (req, res, next) => {
   let token = req.headers.token;
-
   if (token) {
     token = token.split(" ")[1];
     jwt.verify(token, process.env.REACT_APP_JWT_PRIVATE_KEY, (err, decoded) => {

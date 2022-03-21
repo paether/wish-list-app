@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import "./AddEditListItem.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift, faXmark } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 let addItemContainer;
 
@@ -63,21 +64,29 @@ export default function AddlistItem({ wishListId, editData }) {
       return;
     }
     try {
-      // await addWishListItem(
-      //   itemName.value,
-      //   itemDesc.value,
-      //   wishListId,
-      //   itemUrl.value,
-      //   pictureUrl.value
-      // );
+      const token = localStorage.getItem("token");
+      console.log(token);
+      const response = await axios.post(
+        "http://localhost:8800/api/wishList/" + wishListId,
+        {
+          itemName: itemName.value,
+          itemDesc: itemDesc.value,
+          pictureUrl: pictureUrl.value,
+          itemUrl: itemUrl.value,
+        },
+        {
+          headers: {
+            token: "Bearer " + token,
+          },
+        }
+      );
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
-
-    itemName.value = "";
-    itemUrl.value = "";
-    pictureUrl.value = "";
-    itemDesc.value = "";
+    // itemName.value = "";
+    // itemUrl.value = "";
+    // pictureUrl.value = "";
+    // itemDesc.value = "";
   };
 
   return (

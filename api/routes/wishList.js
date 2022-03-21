@@ -7,11 +7,11 @@ const {
   streamWishListItems,
 } = require("../firebase");
 
+//real-time updating
 router.get("/subscribe/:id", verifyToken, async (req, res, next) => {
   if (req.params.id === req.listId) {
     try {
       await authenticateAnonymously();
-      let asd;
       const subscribe = streamWishListItems(req.listId, (querySnapshot) => {
         updatedWishListItems = querySnapshot.docs.map((docSnapshot) => {
           return docSnapshot.data();
@@ -46,7 +46,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 
 //add item to  list
 router.post("/:id", verifyToken, async (req, res) => {
-  if (req.params.id === req.listId) {
+  if (req.params.id === req.listId && req.isAdmin === true) {
     try {
       await authenticateAnonymously();
       await addWishListItem(
@@ -57,9 +57,8 @@ router.post("/:id", verifyToken, async (req, res) => {
         req.body.pictureUrl
       );
 
-      res.json("ok");
+      res.status(200).json({ status: "ok" });
     } catch (error) {
-      console.log(error);
       res.status(500).json(error);
     }
   } else {

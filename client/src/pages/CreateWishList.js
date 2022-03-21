@@ -2,8 +2,8 @@ import React from "react";
 import Loading from "./Loading";
 import bcrypt from "bcryptjs";
 import "./CreateWishList.css";
-import { useNavigate } from "react-router-dom";
 import WishListForm from "../components/WishListForm";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function CreateWishList({
@@ -56,10 +56,9 @@ export default function CreateWishList({
           adminPassword: adminpassword.value,
         }
       );
-      navigate("/wish-list-app/wishList");
       setActiveHeader(".open-list");
-      console.log("Bearer " + response.data.token);
       onWhishListCreation(response.data.listId, response.data.token);
+      navigate("/wish-list-app/wishList?listId=" + response.data.listId);
     } catch (error) {
       console.log(error);
     }
