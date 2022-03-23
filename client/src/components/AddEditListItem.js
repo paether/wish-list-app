@@ -1,12 +1,23 @@
-import { useEffect } from "react";
+import { useContext, useRef } from "react";
 import "./AddEditListItem.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { WishListIdContext, LanguageContext } from "../context";
 import axios from "axios";
+import lang from "../translation";
 
-let addItemContainer;
+export default function AddlistItem({
+  itemNameElement,
+  itemUrlElement,
+  pictureUrlElement,
+  itemDescElement,
+  editData,
+  addItemContainerElement,
+  displayAddEditItemWindow,
+}) {
+  const [wishListId] = useContext(WishListIdContext);
+  const [language] = useContext(LanguageContext);
 
-export default function AddlistItem({ wishListId, editData }) {
   const isValidUrl = (url) => {
     try {
       new URL(url);
@@ -17,21 +28,8 @@ export default function AddlistItem({ wishListId, editData }) {
     return true;
   };
 
-  useEffect(() => {
-    addItemContainer = document.querySelector(".add-item-container");
-  }, []);
-
   const closeAddItemWindow = () => {
-    addItemContainer.style.display = "none";
-  };
-
-  const displayAddItemWindow = () => {
-    addItemContainer.style.display = "flex";
-    addItemContainer.addEventListener("click", (e) => {
-      if (e.target.className === "add-item-container") {
-        addItemContainer.style.display = "none";
-      }
-    });
+    addItemContainerElement.current.style.display = "none";
   };
 
   const displayError = (element, text) => {
@@ -42,51 +40,62 @@ export default function AddlistItem({ wishListId, editData }) {
   const addItem = async (e) => {
     e.preventDefault();
 
-    const itemName = document.getElementById("new_item_name");
-    const itemUrl = document.getElementById("new_item_url");
-    const pictureUrl = document.getElementById("new_item_picture");
-    const itemDesc = document.getElementById("new_item_desc");
-
-    if (itemName.validity.valueMissing) {
-      displayError(itemName, "You need to provide a gift name!");
+    if (itemNameElement.current.validity.valueMissing) {
+      displayError(itemNameElement.current, lang[language].error_name);
       return;
     }
 
-    if (itemUrl.validity.valueMissing) {
-      displayError(itemUrl, "You need to provide an URL to the gift!");
+    if (itemUrlElement.current.validity.valueMissing) {
+      displayError(itemUrlElement.current, lang[language].error_url);
       return;
-    } else if (!isValidUrl(itemUrl.value)) {
-      displayError(itemUrl, "The URL provided is not valid!");
+    } else if (!isValidUrl(itemUrlElement.current.value)) {
+      displayError(itemUrlElement.current, lang[language].error_url_invalid);
       return;
     }
-    if (pictureUrl.value.length > 0 && !isValidUrl(pictureUrl.value)) {
-      displayError(pictureUrl, "The URL provided is not valid!");
+    if (
+      pictureUrlElement.current.value.length > 0 &&
+      !isValidUrl(pictureUrlElement.current.value)
+    ) {
+      displayError(pictureUrlElement.current, lang[language].error_url_invalid);
       return;
     }
     try {
       const token = localStorage.getItem("token");
-      console.log(token);
-      const response = await axios.post(
-        "http://localhost:8800/api/wishList/" + wishListId,
-        {
-          itemName: itemName.value,
-          itemDesc: itemDesc.value,
-          pictureUrl: pictureUrl.value,
-          itemUrl: itemUrl.value,
+
+      const data = {
+        itemName: itemNameElement.current.value,
+        itemDesc: itemDescElement.current.value,
+        pictureUrl: pictureUrlElement.current.value,
+        itemUrl: itemUrlElement.current.value,
+      };
+      const header = {
+        headers: {
+          token: "Bearer " + token,
         },
-        {
-          headers: {
-            token: "Bearer " + token,
-          },
-        }
-      );
+      };
+
+      if (!editData) {
+        const response = await axios.post(
+          "http://localhost:8800/api/wishList/" + wishListId,
+          data,
+          header
+        );
+        itemNameElement.current.value = "";
+        itemUrlElement.current.value = "";
+        pictureUrlElement.current.value = "";
+        itemDescElement.current.value = "";
+      } else {
+        console.log("edit");
+        const response = await axios.put(
+          `http://localhost:8800/api/wishList/${wishListId}/item/${editData.id}`,
+          data,
+          header
+        );
+        closeAddItemWindow();
+      }
     } catch (error) {
       console.log(error);
     }
-    // itemName.value = "";
-    // itemUrl.value = "";
-    // pictureUrl.value = "";
-    // itemDesc.value = "";
   };
 
   return (
@@ -94,11 +103,11 @@ export default function AddlistItem({ wishListId, editData }) {
       <button
         className="add-new-item-btn"
         type="button"
-        onClick={displayAddItemWindow}
+        onClick={() => displayAddEditItemWindow(null)}
       >
-        Add new item
+        {lang[language].list_add_new}
       </button>
-      <div className="add-item-container">
+      <div className="add-item-container" ref={addItemContainerElement}>
         <div className="add-item-window">
           <FontAwesomeIcon
             onClick={closeAddItemWindow}
@@ -118,12 +127,15 @@ export default function AddlistItem({ wishListId, editData }) {
             )}
             <div className="new-item-details">
               <div className="new-item-input-container">
-                <label htmlFor="new_item_name">Gift name</label>
+                <label htmlFor="new_item_name">
+                  {lang[language].list_add_name}
+                </label>
                 <input
                   onChange={(e) => {
                     e.target.setCustomValidity("");
                   }}
                   type="text"
+                  ref={itemNameElement}
                   name="new_item_name"
                   id="new_item_name"
                   placeholder=" "
@@ -131,7 +143,9 @@ export default function AddlistItem({ wishListId, editData }) {
                 />
               </div>
               <div className="new-item-input-container">
-                <label htmlFor="new_item_desc">Gift description</label>
+                <label htmlFor="new_item_desc">
+                  {lang[language].list_add_desc}
+                </label>
                 <input
                   onChange={(e) => {
                     e.target.setCustomValidity("");
@@ -139,11 +153,14 @@ export default function AddlistItem({ wishListId, editData }) {
                   type="text"
                   name="new_item_desc"
                   id="new_item_desc"
+                  ref={itemDescElement}
                   placeholder=" "
                 />
               </div>
               <div className="new-item-input-container">
-                <label htmlFor="new_item_url">Link to the gift</label>
+                <label htmlFor="new_item_url">
+                  {lang[language].list_add_link}
+                </label>
                 <input
                   onChange={(e) => {
                     e.target.setCustomValidity("");
@@ -151,13 +168,14 @@ export default function AddlistItem({ wishListId, editData }) {
                   type="text"
                   name="new_item_url"
                   id="new_item_url"
+                  ref={itemUrlElement}
                   placeholder=" "
                   required
                 />
               </div>
               <div className="new-item-input-container">
                 <label htmlFor="new_item_picture">
-                  Link to the picture of the gift (optional)
+                  {lang[language].list_add_pic_link}
                 </label>
                 <input
                   onChange={(e) => {
@@ -166,13 +184,14 @@ export default function AddlistItem({ wishListId, editData }) {
                   type="text"
                   name="new_item_picture"
                   id="new_item_picture"
+                  ref={pictureUrlElement}
                   placeholder=" "
                 />
               </div>
             </div>
           </div>
           <button className="add-new-item-btn" onClick={addItem}>
-            Add new item
+            {editData ? lang[language].list_edit : lang[language].list_add_new}
           </button>
         </div>
       </div>

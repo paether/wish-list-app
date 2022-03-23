@@ -1,8 +1,7 @@
-const dotenv = require("dotenv");
-dotenv.config();
-const { v4: uuidv4 } = require("uuid");
-
-const { initializeApp } = require("firebase/app");
+/* eslint-disable consistent-return */
+const dotenv = require('dotenv');
+const { v4: uuidv4 } = require('uuid');
+const { initializeApp } = require('firebase/app');
 const {
   getFirestore,
   query,
@@ -18,8 +17,10 @@ const {
   serverTimestamp,
   arrayUnion,
   deleteDoc,
-} = require("firebase/firestore");
-const { getAuth, signInAnonymously } = require("firebase/auth");
+} = require('firebase/firestore');
+const { getAuth, signInAnonymously } = require('firebase/auth');
+
+dotenv.config();
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -30,16 +31,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const authenticateAnonymously = () => {
-  return signInAnonymously(getAuth(app));
-};
-
-const getDb = () => {
-  return getFirestore(app);
-};
+const authenticateAnonymously = () => signInAnonymously(getAuth(app));
 
 const createWishList = (userId, whishListName, secretKey, adminSecretKey) => {
-  const wishListRefCol = collection(db, "wishLists");
+  const wishListRefCol = collection(db, 'wishLists');
   return addDoc(wishListRefCol, {
     created: serverTimestamp(),
     locked: false,
@@ -51,48 +46,48 @@ const createWishList = (userId, whishListName, secretKey, adminSecretKey) => {
 };
 
 const getWishLists = () => {
-  const wishListsRefDoc = collection(db, "wishLists");
+  const wishListsRefDoc = collection(db, 'wishLists');
   return wishListsRefDoc;
 };
 
 const getWishList = (wishListId) => {
-  const wishListRefDoc = doc(db, "wishLists", wishListId);
+  const wishListRefDoc = doc(db, 'wishLists', wishListId);
   return getDoc(wishListRefDoc);
 };
 
 const getWishListItems = (wishListId) => {
-  const wishListRefCol = collection(db, "wishLists", wishListId, "items");
+  const wishListRefCol = collection(db, 'wishLists', wishListId, 'items');
   return getDocs(wishListRefCol);
 };
 
 const streamWishListItems = (wishListId, snapshot, error) => {
-  const itemsColRef = collection(db, "wishLists", wishListId, "items");
-  const itemsQuery = query(itemsColRef, orderBy("created"));
+  const itemsColRef = collection(db, 'wishLists', wishListId, 'items');
+  const itemsQuery = query(itemsColRef, orderBy('created'));
   return onSnapshot(itemsQuery, snapshot, error);
 };
 
 const addUserWishList = (wishListId, userId) => {
-  const wishListRefDoc = doc(db, "wishLists", wishListId);
+  const wishListRefDoc = doc(db, 'wishLists', wishListId);
   return updateDoc(wishListRefDoc, {
     users: arrayUnion({
-      userId: userId,
+      userId,
     }),
   });
 };
 
 const updateWishListStatus = (wishListId, locked) => {
-  const wishListRefDoc = doc(db, "wishLists", wishListId);
+  const wishListRefDoc = doc(db, 'wishLists', wishListId);
   return updateDoc(
     wishListRefDoc,
     {
       locked,
     },
-    { merge: true }
+    { merge: true },
   );
 };
 
 const updateWishListItemName = (wishListId, listItemId, name) => {
-  const listItemRef = doc(db, "wishLists", wishListId, "items", listItemId);
+  const listItemRef = doc(db, 'wishLists', wishListId, 'items', listItemId);
   return (
     updateDoc(listItemRef, {
       name,
@@ -105,9 +100,9 @@ const updateWishListItemStatus = async (
   wishListId,
   listItemId,
   reserved,
-  bought
+  bought,
 ) => {
-  const listItemRef = doc(db, "wishLists", wishListId, "items", listItemId);
+  const listItemRef = doc(db, 'wishLists', wishListId, 'items', listItemId);
   const listItemDoc = await getDoc(listItemRef);
 
   if (listItemDoc.data().bought === false) {
@@ -117,13 +112,13 @@ const updateWishListItemStatus = async (
         reserved,
         bought,
       },
-      { merge: true }
+      { merge: true },
     );
   }
 };
 
 const deleteWishListItem = (wishListId, listItemId) => {
-  const listItemRef = doc(db, "wishLists", wishListId, "items", listItemId);
+  const listItemRef = doc(db, 'wishLists', wishListId, 'items', listItemId);
   return deleteDoc(listItemRef);
 };
 
@@ -132,17 +127,10 @@ const addWishListItem = async (
   itemDesc,
   wishListId,
   itemUrl,
-  pictureUrl
+  pictureUrl,
 ) => {
-  // const querySnapshot = await getWishListItems(wishListId);
-  // const wishListItems = querySnapshot.docs;
-  // const matchingItem = wishListItems.find(
-  //   (wishListItem) =>
-  //     wishListItem.data().itemName.toLowerCase() === itemName.toLowerCase()
-  // );
-  // if (!matchingItem) {
   const id = uuidv4();
-  const itemsColRef = doc(db, "wishLists", wishListId, "items", id);
+  const itemsColRef = doc(db, 'wishLists', wishListId, 'items', id);
   return setDoc(itemsColRef, {
     id,
     reserved: false,
@@ -153,7 +141,26 @@ const addWishListItem = async (
     pictureUrl,
     created: serverTimestamp(),
   });
-  // }
+};
+
+const updateWishListItem = (
+  wishListId,
+  listItemId,
+  itemName,
+  itemDesc,
+  itemUrl,
+  pictureUrl,
+) => {
+  const listItemRef = doc(db, 'wishLists', wishListId, 'items', listItemId);
+  return (
+    updateDoc(listItemRef, {
+      itemName,
+      itemDesc,
+      itemUrl,
+      pictureUrl,
+    }),
+    { merge: true }
+  );
 };
 
 module.exports = {
@@ -169,5 +176,5 @@ module.exports = {
   updateWishListItemStatus,
   updateWishListItemName,
   updateWishListStatus,
-  getDb,
+  updateWishListItem,
 };

@@ -1,14 +1,48 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { WishListIdContext, LanguageContext } from "../context";
 import "./Confirmation.css";
+import axios from "axios";
+import lang from "../translation";
 
 export default function Confirmation(props) {
-  const handleBuyConfirmation = () => {
-    // updateWishListItemStatus(props.wishListId, props.listItem.id, false, true);
+  const [wishListId] = useContext(WishListIdContext);
+  const [language] = useContext(LanguageContext);
+
+  const handleBuyConfirmation = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        `http://localhost:8800/api/wishList/${wishListId}/item/${props.listItem.id}/status`,
+        {
+          reserved: false,
+          bought: true,
+        },
+        {
+          headers: {
+            token: "Bearer " + token,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
     props.setConfirmationId(null);
   };
 
-  const handleDelete = () => {
-    // deleteWishListItem(props.wishListId, props.listItem.id);
+  const handleDelete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.delete(
+        `http://localhost:8800/api/wishList/${wishListId}/item/${props.listItem.id}`,
+        {
+          headers: {
+            token: "Bearer " + token,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
     props.setConfirmationId(null);
   };
 
@@ -32,10 +66,10 @@ export default function Confirmation(props) {
     <div className="confirm-buy-container">
       <div className="confirm-buy-window">
         <h2>
-          Please confirm that you{" "}
+          {lang[language].confirm_please}
           {props.isDelete
-            ? "want to delete this gift:"
-            : " have bought this gift:"}
+            ? lang[language].confirm_delete
+            : lang[language].confirm_bought}
         </h2>
         <div className="confirm-item">{props.listItem.itemName}</div>
         <div className="confirm-button-container">
@@ -45,13 +79,13 @@ export default function Confirmation(props) {
             }}
             className="confirm-button"
           >
-            Confirm
+            {lang[language].confirm}
           </button>
           <button
             onClick={() => props.setConfirmationId(null)}
             className="confirm-button cancel"
           >
-            Cancel
+            {lang[language].list_cancel}
           </button>
         </div>
       </div>

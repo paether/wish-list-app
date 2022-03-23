@@ -12,8 +12,14 @@
 }
 
 .logo {
+  cursor: pointer;
   margin-right: auto;
-  color: white;
+  width: 70px;
+  height: 70px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-image: url("../../public/assets/gift.png");
 }
 
 .header-container > ul {
@@ -21,6 +27,7 @@
   gap: 20px;
 }
 .header-item {
+  cursor: pointer;
   padding: 8px;
   border: 1px solid transparent;
 }
@@ -50,4 +57,29 @@ li {
 
 .custom-shape-divider-top-1646235534 .shape-fill {
   fill: #001220;
+}
+.flag-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.flag {
+  width: 32px;
+  height: 24px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border: 0;
+  cursor: pointer;
+  opacity: 0.3;
+}
+.flag.hu {
+  background-image: url("../../public/assets/hu.svg");
+}
+.flag.gb {
+  background-image: url("../../public/assets/gb.svg");
+}
+.flag.active {
+  opacity: 1;
 }

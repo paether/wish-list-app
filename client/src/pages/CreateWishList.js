@@ -1,17 +1,19 @@
-import React from "react";
+import { useCallback, useRef, useContext } from "react";
 import Loading from "./Loading";
-import bcrypt from "bcryptjs";
 import "./CreateWishList.css";
 import WishListForm from "../components/WishListForm";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { LanguageContext } from "../context";
+import lang from "../translation";
 
-export default function CreateWishList({
-  onWhishListCreation,
-  isLoading,
-  language,
-}) {
+export default function CreateWishList({ onWhishListCreation, isLoading }) {
   const navigate = useNavigate();
+  const [language] = useContext(LanguageContext);
+
+  const listIdName = useRef(null);
+  const secretKeyElement = useRef(null);
+  const adminKeyElement = useRef(null);
 
   const displayError = (element, text) => {
     element.setCustomValidity(text);
@@ -27,53 +29,58 @@ export default function CreateWishList({
     openHeaderItem.classList.add("active");
   };
 
-  const createWishList = async (e) => {
-    e.preventDefault();
+  const createWishList = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    const listName = document.getElementById("list_id_name");
-    const password = document.getElementById("secret_key");
-    const adminpassword = document.getElementById("admin_key");
+      if (listIdName.current.validity.valueMissing) {
+        displayError(listIdName.current, lang[language].error_name);
+        return;
+      }
+      if (secretKeyElement.current.validity.valueMissing) {
+        displayError(secretKeyElement.current, lang[language].error_password);
+        return;
+      }
+      if (adminKeyElement.current.validity.valueMissing) {
+        displayError(adminKeyElement.current, lang[language].error_admin);
+        return;
+      }
 
-    if (listName.validity.valueMissing) {
-      displayError(listName, "You need to provide a Wish List name!");
-      return;
-    }
-    if (password.validity.valueMissing) {
-      displayError(password, "You need to provide a password!");
-      return;
-    }
-    if (adminpassword.validity.valueMissing) {
-      displayError(adminpassword, "You need to provide an admin password!");
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        "http://localhost:8800/api/auth/create",
-        {
-          listName: listName.value,
-          password: password.value,
-          adminPassword: adminpassword.value,
-        }
-      );
-      setActiveHeader(".open-list");
-      onWhishListCreation(response.data.listId, response.data.token);
-      navigate("/wish-list-app/wishList?listId=" + response.data.listId);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      try {
+        const response = await axios.post(
+          "http://localhost:8800/api/auth/create",
+          {
+            listName: listIdName.current.value,
+            password: secretKeyElement.current.value,
+            adminPassword: adminKeyElement.current.value,
+          }
+        );
+        setActiveHeader(".open-list");
+        onWhishListCreation(response.data.listId, response.data.token);
+        navigate("/wish-list-app/wishList?listId=" + response.data.listId);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [navigate, onWhishListCreation, language]
+  );
 
   return (
     <div className="create-wish-list-container">
       <h2 className="create-wish-list-headline">
-        Create your Wish List right away,
-        <br /> <span>NO</span> <br />
-        e-mail is required!
+        {lang[language].create_header1}
+        <br /> <span>{lang[language].create_no}</span> <br />
+        {lang[language].create_header2}
       </h2>
 
       {!isLoading ? (
-        <WishListForm submitButtonAction={createWishList} isCreate={true} />
+        <WishListForm
+          submitButtonAction={createWishList}
+          isCreate={true}
+          listIdRef={listIdName}
+          secretKeyElementRef={secretKeyElement}
+          adminKeyElementRef={adminKeyElement}
+        />
       ) : (
         <Loading language={language} />
       )}

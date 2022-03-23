@@ -1,19 +1,29 @@
 import ListItems from "./ListItems";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import "./WishListMenu.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import NotAuthorized from "./NotAuthorized";
 import axios from "axios";
-let toggleButton;
-let listName = "";
-export default function WishListMenu({
-  wishListId,
-  isAuthorized,
-  setIsAuthorized,
-  isAdmin,
-  setIsAdmin,
-}) {
+import lang from "../translation";
+
+import {
+  AdminContext,
+  AuthorizedContext,
+  WishListIdContext,
+  LanguageContext,
+} from "../context";
+
+export default function WishListMenu() {
   const [showAdmin, setShowAdmin] = useState(false);
+  const [listName, setListName] = useState("");
+
+  const [, setIsAdmin] = useContext(AdminContext);
+  const [isAuthorized, setIsAuthorized] = useContext(AuthorizedContext);
+  const [wishListId] = useContext(WishListIdContext);
+  const [language] = useContext(LanguageContext);
+
+  const secretKeyElement = useRef(null);
+  const adminKeyElement = useRef(null);
+  const toggleButtonElement = useRef(null);
 
   const getListName = async () => {
     const token = localStorage.getItem("token");
@@ -26,21 +36,20 @@ export default function WishListMenu({
           },
         }
       );
-      listName = response.data;
+      setListName(response.data);
     } catch (error) {
       console.log("cannot get listname");
     }
   };
 
-  if (!listName) {
+  if (!listName && isAuthorized) {
     getListName();
   }
 
   useEffect(() => {
     if (!isAuthorized) {
-      toggleButton = document.querySelector(".switch-button-checkbox");
-      toggleButton.addEventListener("click", () => {
-        if (toggleButton.checked) {
+      toggleButtonElement.current.addEventListener("click", () => {
+        if (toggleButtonElement.current.checked) {
           setShowAdmin(true);
         } else {
           setShowAdmin(false);
@@ -56,22 +65,19 @@ export default function WishListMenu({
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    let adminKeyElementValue = "";
-    const secretKeyElement = document.getElementById("secret_key");
+    let adminKeyElementValue = false;
 
-    if (secretKeyElement.validity.valueMissing) {
-      displayError(listName, "You need to provide a password!");
+    if (secretKeyElement.current.validity.valueMissing) {
+      displayError(secretKeyElement.current, lang[language].error_password);
       return;
     }
 
-    if (toggleButton.checked) {
-      let adminKeyElement = document.getElementById("admin_key");
-
-      if (adminKeyElement.validity.valueMissing) {
-        displayError(listName, "You need to provide an admin password!");
+    if (toggleButtonElement.current.checked) {
+      if (adminKeyElement.current.validity.valueMissing) {
+        displayError(adminKeyElement.current, lang[language].error_password);
         return;
       }
-      adminKeyElementValue = adminKeyElement.value;
+      adminKeyElementValue = adminKeyElement.current.value;
     }
 
     try {
@@ -79,111 +85,40 @@ export default function WishListMenu({
         "http://localhost:8800/api/auth/login",
         {
           listId: wishListId,
-          password: secretKeyElement.value,
+          password: secretKeyElement.current.value,
           adminPassword: adminKeyElementValue,
-          isAdmin: adminKeyElementValue,
         }
       );
+      localStorage.setItem("token", response.data.token);
+      setIsAuthorized(true);
       if (adminKeyElementValue) {
         setIsAdmin(true);
       }
-      setIsAuthorized(true);
-      listName = response.data.listName;
-      localStorage.setItem("token", response.data.token);
     } catch (error) {
       console.log(error);
     }
   };
-  const handlePasswordVisibility = (elementId) => {
-    const inputElement = document.getElementById(elementId);
-    inputElement.type === "password"
-      ? (inputElement.type = "text")
-      : (inputElement.type = "password");
-  };
 
   if (!isAuthorized) {
     return (
-      <div className="not-authorized-container">
-        <form className="not-authorized-form">
-          <div className="switch-button">
-            <input className="switch-button-checkbox" type="checkbox"></input>
-            <label className="switch-button-label" htmlFor="">
-              <span className="switch-button-label-span">User</span>
-            </label>
-          </div>
-          <div className="not-authorized-headline">
-            <h1>You need to provide a password to access this list</h1>
-            {/* <div className="access-item">{listName}</div>
-            <h1>to access it.</h1> */}
-          </div>
-
-          <div className="input-container">
-            <label htmlFor="secret_key">Wish List Password</label>
-            <div className="input-flex">
-              <input
-                className="access-input"
-                type="password"
-                onChange={(e) => {
-                  e.target.setCustomValidity("");
-                }}
-                name="secret_key"
-                id="secret_key"
-                autoComplete="password"
-                required
-              />
-              <FontAwesomeIcon
-                onClick={() => handlePasswordVisibility("secret_key")}
-                icon={faEye}
-              />
-            </div>
-          </div>
-          {showAdmin && (
-            <div className="input-container">
-              <label htmlFor="admin_key">Admin Wish List Password</label>
-              <div className="input-flex">
-                <input
-                  className="access-input"
-                  type="password"
-                  name="admin_key"
-                  onChange={(e) => {
-                    e.target.setCustomValidity("");
-                  }}
-                  id="admin_key"
-                  autoComplete="off"
-                  required
-                />
-                <FontAwesomeIcon
-                  onClick={() => handlePasswordVisibility("admin_key")}
-                  icon={faEye}
-                />
-              </div>
-            </div>
-          )}
-
-          <button className="access-button" onClick={handleLogin}>
-            Access list
-          </button>
-        </form>
-      </div>
+      <NotAuthorized
+        {...{
+          adminKeyElement,
+          handleLogin,
+          showAdmin,
+          toggleButtonElement,
+          secretKeyElement,
+        }}
+      />
     );
   }
 
   return (
     <div className="wish-list-menu-container">
-      <h1>Welcome.</h1>
-      <h2>It's time to pick presents!</h2>
+      <h1>{lang[language].menu_header1}</h1>
+      <h2>{lang[language].menu_header2}</h2>
       <div className="list-name">{listName}</div>
-      {isAuthorized && (
-        <ListItems
-          {...{
-            // localAdminSessionId,
-            isAdmin,
-            wishListId,
-            setIsAdmin,
-            // updateSessionData,
-          }}
-        />
-      )}
+      {isAuthorized && <ListItems />}
     </div>
   );
 }

@@ -45,6 +45,8 @@ svg {
 }
 
 .or {
+  font-size: 3rem;
+  font-weight: 700;
   padding: 2rem;
   color: white;
 }

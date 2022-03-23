@@ -1,54 +1,113 @@
 import "./Header.css";
-import { useNavigate, useEffect } from "react-router-dom";
+import lang from "../translation";
+import { useContext, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { WishListIdContext, LanguageContext } from "../context";
 
-export default function Header({ wishListId }) {
+export default function Header() {
+  const [wishListId] = useContext(WishListIdContext);
+  const [language, setLanguage] = useContext(LanguageContext);
+  const huFlag = useRef(null);
+  const gbFlag = useRef(null);
+
+  const home = useRef(null);
+  const open = useRef(null);
+  const create = useRef(null);
+  const about = useRef(null);
+
   const navigate = useNavigate();
 
-  const handleClick = (e, path) => {
-    navigate(path);
-    const headerItems = [...document.querySelectorAll(".header-item")];
-    headerItems
-      .find((item) => item.classList.contains("active"))
-      ?.classList.remove("active");
+  const handleClick = (ref, path) => {
+    home.current.classList.remove("active");
+    open.current.classList.remove("active");
+    create.current.classList.remove("active");
+    about.current.classList.remove("active");
 
-    e.target.classList.add("active");
+    navigate(path);
+    ref.current.classList.add("active");
+  };
+
+  useEffect(() => {
+    const currentLoc = window.location.href;
+    if (currentLoc.includes("/wishList")) {
+      open.current.classList.add("active");
+    } else if (currentLoc.includes("/create")) {
+      create.current.classList.add("active");
+    } else if (currentLoc.includes("/about")) {
+      about.current.classList.add("active");
+    } else {
+      home.current.classList.add("active");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (language === "en") {
+      gbFlag.current.classList.add("active");
+      huFlag.current.classList.remove("active");
+    } else {
+      huFlag.current.classList.add("active");
+      gbFlag.current.classList.remove("active");
+    }
+  }, [language]);
+
+  const changeLang = (lang) => {
+    setLanguage(lang);
   };
 
   return (
     <div className="header">
       <div className="header-container ">
-        <div className="logo">Logo</div>
+        <div
+          className="logo"
+          onClick={() => handleClick(home, "/wish-list-app")}
+        ></div>
         <ul>
-          <li
-            onClick={(e) => handleClick(e, "/wish-list-app")}
-            className="header-item home active"
-          >
-            Home
+          <li className="flag-container">
+            <div
+              className="flag hu"
+              ref={huFlag}
+              onClick={() => changeLang("hu")}
+            ></div>
+            <div
+              className="flag gb"
+              ref={gbFlag}
+              onClick={() => changeLang("en")}
+            ></div>
           </li>
           <li
-            onClick={(e) =>
+            onClick={() => handleClick(home, "/wish-list-app")}
+            className="header-item home"
+            ref={home}
+          >
+            {lang[language].header_home}
+          </li>
+          <li
+            onClick={() =>
               handleClick(
-                e,
+                open,
                 wishListId
                   ? `/wish-list-app/wishList?listId=${wishListId}`
                   : "/wish-list-app/wishList"
               )
             }
+            ref={open}
             className="header-item open-list"
           >
-            Open
+            {lang[language].header_open}
           </li>
           <li
-            onClick={(e) => handleClick(e, "/wish-list-app/create")}
+            onClick={() => handleClick(create, "/wish-list-app/create")}
             className="header-item create-list"
+            ref={create}
           >
-            Create
+            {lang[language].header_create}
           </li>
           <li
-            onClick={(e) => handleClick(e, "/wish-list-app/about")}
+            onClick={() => handleClick(about, "/wish-list-app/about")}
             className="header-item about"
+            ref={about}
           >
-            About
+            {lang[language].header_about}
           </li>
         </ul>
       </div>

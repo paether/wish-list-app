@@ -1,10 +1,14 @@
 import "./Home.css";
 import KUTE from "kute.js";
-import { useEffect, useState } from "react";
+import lang from "../translation";
+import { useEffect, useContext, useRef } from "react";
+import { WishListIdContext, LanguageContext } from "../context";
 import { useNavigate } from "react-router-dom";
 
-export default function Home({ isLoading, language, wishListId }) {
+export default function Home() {
   const navigate = useNavigate();
+  const [wishListId] = useContext(WishListIdContext);
+  const [language] = useContext(LanguageContext);
 
   const handleButtonClick = (path, className) => {
     const homeHeader = document.querySelector(".header-item.home");
@@ -37,8 +41,8 @@ export default function Home({ isLoading, language, wishListId }) {
     <div className="home-container">
       <h1 className="headline">
         <span>
-          Welcome to your favorite
-          <br /> Wish List website!
+          {lang[language].home_welcome}
+          <br /> {lang[language].home_welcome2}
         </span>
       </h1>
       <div className="home-options-container">
@@ -51,10 +55,10 @@ export default function Home({ isLoading, language, wishListId }) {
           }
           className="home-button create"
         >
-          Create your Wish List
+          {lang[language].home_create}
         </button>
 
-        <div className="or">Or</div>
+        <div className="or"> {lang[language].home_or}</div>
 
         <button
           onClick={() =>
@@ -67,7 +71,7 @@ export default function Home({ isLoading, language, wishListId }) {
           }
           className="home-button open"
         >
-          Open an existing Wish List
+          {lang[language].home_open}
         </button>
       </div>
       <section className="svg-container">
