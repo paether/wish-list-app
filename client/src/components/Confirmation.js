@@ -11,7 +11,7 @@ export default function Confirmation(props) {
   const handleBuyConfirmation = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:8800/api/wishList/${wishListId}/item/${props.listItem.id}/status`,
         {
           reserved: false,
@@ -32,7 +32,7 @@ export default function Confirmation(props) {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.delete(
+      await axios.delete(
         `http://localhost:8800/api/wishList/${wishListId}/item/${props.listItem.id}`,
         {
           headers: {

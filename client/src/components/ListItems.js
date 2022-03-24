@@ -16,15 +16,19 @@ import { io } from "socket.io-client";
 import lang from "../translation";
 
 export default function ListItems() {
+  //states
   const [wishListItems, setWishListItems] = useState([]);
   const [confirmationId, setConfirmationId] = useState("");
   const [showAdmin, setShowAdmin] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [editData, setEditData] = useState(null);
+
+  //context states
   const [isAdmin, setIsAdmin] = useContext(AdminContext);
   const [wishListId] = useContext(WishListIdContext);
   const [language] = useContext(LanguageContext);
 
+  //elements
   const adminKeyElement = useRef(null);
   const toggleButtonElement = useRef(null);
   const copyButtonElement = useRef(null);
@@ -34,6 +38,7 @@ export default function ListItems() {
   const itemUrlElement = useRef(null);
   const pictureUrlElement = useRef(null);
   const itemDescElement = useRef(null);
+  const addItemWindowElement = useRef(null);
 
   const displayAddEditItemWindow = (data) => {
     if (data) {
@@ -50,12 +55,16 @@ export default function ListItems() {
       itemDescElement.current.value = "";
     }
     addItemContainerElement.current.style.display = "flex";
+
+    addItemWindowElement.current.classList.add("appear");
     addItemContainerElement.current.addEventListener("click", (e) => {
       if (e.target.className === "add-item-container") {
         addItemContainerElement.current.style.display = "none";
+        addItemWindowElement.current.classList.remove("appear");
       }
     });
   };
+
   //store mounted state to prevent late firestore snapshot calls, causing render on unmounted component
   useEffect(() => {
     mounted.current = true;
@@ -86,7 +95,7 @@ export default function ListItems() {
   const handleReserve = async (listItemId, reserved, bought) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:8800/api/wishList/${wishListId}/item/${listItemId}/status`,
         {
           reserved,
@@ -362,6 +371,7 @@ export default function ListItems() {
             pictureUrlElement,
             itemDescElement,
             editData,
+            addItemWindowElement,
           }}
         />
       )}

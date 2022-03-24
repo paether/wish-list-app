@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import "./AddEditListItem.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +14,7 @@ export default function AddlistItem({
   editData,
   addItemContainerElement,
   displayAddEditItemWindow,
+  addItemWindowElement,
 }) {
   const [wishListId] = useContext(WishListIdContext);
   const [language] = useContext(LanguageContext);
@@ -75,7 +76,7 @@ export default function AddlistItem({
       };
 
       if (!editData) {
-        const response = await axios.post(
+        await axios.post(
           "http://localhost:8800/api/wishList/" + wishListId,
           data,
           header
@@ -85,8 +86,7 @@ export default function AddlistItem({
         pictureUrlElement.current.value = "";
         itemDescElement.current.value = "";
       } else {
-        console.log("edit");
-        const response = await axios.put(
+        await axios.put(
           `http://localhost:8800/api/wishList/${wishListId}/item/${editData.id}`,
           data,
           header
@@ -108,7 +108,7 @@ export default function AddlistItem({
         {lang[language].list_add_new}
       </button>
       <div className="add-item-container" ref={addItemContainerElement}>
-        <div className="add-item-window">
+        <div className="add-item-window" ref={addItemWindowElement}>
           <FontAwesomeIcon
             onClick={closeAddItemWindow}
             className="close-button"

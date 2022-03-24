@@ -4,6 +4,7 @@ import "./WishListMenu.css";
 import NotAuthorized from "./NotAuthorized";
 import axios from "axios";
 import lang from "../translation";
+import Loading from "../pages/Loading";
 
 import {
   AdminContext,
@@ -39,6 +40,7 @@ export default function WishListMenu() {
       setListName(response.data);
     } catch (error) {
       console.log("cannot get listname");
+    } finally {
     }
   };
 
@@ -113,12 +115,16 @@ export default function WishListMenu() {
     );
   }
 
-  return (
-    <div className="wish-list-menu-container">
-      <h1>{lang[language].menu_header1}</h1>
-      <h2>{lang[language].menu_header2}</h2>
-      <div className="list-name">{listName}</div>
-      {isAuthorized && <ListItems />}
-    </div>
-  );
+  if (!listName) {
+    return <Loading />;
+  } else {
+    return (
+      <div className="wish-list-menu-container">
+        <h1>{lang[language].menu_header1}</h1>
+        <h2>{lang[language].menu_header2}</h2>
+        <div className="list-name">{listName}</div>
+        {isAuthorized && <ListItems />}
+      </div>
+    );
+  }
 }

@@ -9,6 +9,7 @@ import lang from "../translation";
 
 export default function CreateWishList({ onWhishListCreation, isLoading }) {
   const navigate = useNavigate();
+
   const [language] = useContext(LanguageContext);
 
   const listIdName = useRef(null);
@@ -82,7 +83,7 @@ export default function CreateWishList({ onWhishListCreation, isLoading }) {
           adminKeyElementRef={adminKeyElement}
         />
       ) : (
-        <Loading language={language} />
+        <Loading />
       )}
     </div>
   );

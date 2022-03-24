@@ -1,7 +1,7 @@
 import "./Home.css";
 import KUTE from "kute.js";
 import lang from "../translation";
-import { useEffect, useContext, useRef } from "react";
+import { useEffect, useContext } from "react";
 import { WishListIdContext, LanguageContext } from "../context";
 import { useNavigate } from "react-router-dom";
 

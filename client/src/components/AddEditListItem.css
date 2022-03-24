@@ -20,6 +20,24 @@
   position: relative;
   align-items: center;
   justify-content: center;
+  border: 2px solid black;
+}
+.add-item-window.appear {
+  animation: slide-in 300ms ease;
+}
+.add-item-window.disappear {
+  transform: scale(100%);
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
 }
 .fa-xmark {
   position: absolute;
@@ -31,7 +49,7 @@
   background-color: #001f36;
   cursor: pointer;
 }
-.add-item-window:after {
+/* .add-item-window:after {
   z-index: -1;
   content: "";
   position: absolute;
@@ -41,7 +59,7 @@
   left: 4px;
   width: calc(100% - 1px);
   height: calc(100% - 1px);
-}
+} */
 
 .fa-gift {
   width: 80px;

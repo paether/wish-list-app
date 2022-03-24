@@ -4,6 +4,8 @@ import "./WishListForm.css";
 import { useState, useRef, useCallback, useContext } from "react";
 import { LanguageContext } from "../context";
 import lang from "../translation";
+import { motion } from "framer-motion";
+
 export default function WishListForm({
   submitButtonAction,
   isCreate,
@@ -33,8 +35,24 @@ export default function WishListForm({
       ? (ref.current.type = "text")
       : (ref.current.type = "password");
   };
+  const appear = {
+    hidden: { scale: "0%", opacity: 1 },
+    visible: {
+      scale: "100%",
+      transition: {
+        duration: 1.5,
+        type: "spring",
+        bounce: 0.5,
+      },
+    },
+  };
   return (
-    <form className="wish-list-form-container">
+    <motion.form
+      className="wish-list-form-container"
+      variants={appear}
+      initial="hidden"
+      animate="visible"
+    >
       {!isCreate && (
         <div className="switch-button">
           <input
@@ -44,8 +62,9 @@ export default function WishListForm({
             ref={toggleButtonElement}
           ></input>
           <label className="switch-button-label" htmlFor="">
-            {lang[language].form_user}
-            <span className="switch-button-label-span"></span>
+            <span className="switch-button-label-span">
+              {lang[language].form_user}
+            </span>
           </label>
         </div>
       )}
@@ -141,6 +160,6 @@ export default function WishListForm({
       >
         {isCreate ? lang[language].form_create : lang[language].form_open}
       </button>
-    </form>
+    </motion.form>
   );
 }

@@ -7,9 +7,9 @@ import { WishListIdContext, LanguageContext } from "../context";
 export default function Header() {
   const [wishListId] = useContext(WishListIdContext);
   const [language, setLanguage] = useContext(LanguageContext);
+
   const huFlag = useRef(null);
   const gbFlag = useRef(null);
-
   const home = useRef(null);
   const open = useRef(null);
   const create = useRef(null);

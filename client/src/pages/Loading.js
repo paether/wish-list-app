@@ -11,7 +11,6 @@ export default function Loading({ error }) {
         <div></div>
         <div></div>
       </div>
-      {/* <div className="loading-text">{language[props.language].loading}</div> */}
       {error && (
         <div className="loading-error">
           Cannot load this list. Please make sure the list ID is provided

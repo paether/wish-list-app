@@ -61,8 +61,3 @@ body {
     transform: rotate(360deg);
   }
 }
-.open-list-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}

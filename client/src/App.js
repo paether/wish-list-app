@@ -5,6 +5,7 @@ import {
   AuthorizedContext,
   WishListIdContext,
   LanguageContext,
+  LoadingContext,
 } from "./context";
 import CreateWishList from "./pages/CreateWishList";
 import Header from "./pages/Header";
@@ -20,66 +21,65 @@ function App() {
     new URLSearchParams(window.location.search).get("listId")
   );
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
   const [language, setLanguage] = useState(
     JSON.parse(localStorage.getItem("language")) || "en"
   );
-
   useEffect(() => {
     localStorage.setItem("language", JSON.stringify(language));
   }, [language]);
 
   const onWhishListCreation = useCallback((wishListId, token) => {
-    setIsloading(true);
+    setIsLoading(true);
     localStorage.setItem("token", token);
     setWishListId(wishListId);
     setIsAuthorized(true);
     setIsAdmin(true);
-    setIsloading(false);
+    setIsLoading(false);
   }, []);
 
   return (
     <BrowserRouter>
-      <AdminContext.Provider value={[isAdmin, setIsAdmin]}>
-        <AuthorizedContext.Provider value={[isAuthorized, setIsAuthorized]}>
-          <WishListIdContext.Provider value={[wishListId, setWishListId]}>
-            <LanguageContext.Provider value={[language, setLanguage]}>
-              <Header />
-              <Routes>
-                <Route
-                  path="/wish-list-app"
-                  element={<Home {...{ language, isLoading }} />}
-                />
-                <Route
-                  path="/wish-list-app/create"
-                  element={
-                    <CreateWishList {...{ isLoading, onWhishListCreation }} />
-                  }
-                />
-                <Route
-                  path="/wish-list-app/wishList"
-                  element={
-                    wishListId && !isLoading ? (
-                      <WishListMenu
-                        {...{
-                          isLoading,
-                        }}
-                      />
-                    ) : isLoading ? (
-                      <Loading />
-                    ) : (
-                      <OpenList />
-                    )
-                  }
-                />
-              </Routes>
-              <Footer />
-            </LanguageContext.Provider>
-          </WishListIdContext.Provider>
-        </AuthorizedContext.Provider>
-      </AdminContext.Provider>
+      <LoadingContext.Provider value={[isLoading, setIsLoading]}>
+        <AdminContext.Provider value={[isAdmin, setIsAdmin]}>
+          <AuthorizedContext.Provider value={[isAuthorized, setIsAuthorized]}>
+            <WishListIdContext.Provider value={[wishListId, setWishListId]}>
+              <LanguageContext.Provider value={[language, setLanguage]}>
+                <Header />
+                <Routes>
+                  <Route
+                    path="/wish-list-app"
+                    element={<Home {...{ language }} />}
+                  />
+                  <Route
+                    path="/wish-list-app/create"
+                    element={<CreateWishList {...{ onWhishListCreation }} />}
+                  />
+                  <Route
+                    path="/wish-list-app/wishList"
+                    element={
+                      wishListId && !isLoading ? (
+                        <WishListMenu
+                          {...{
+                            isLoading,
+                          }}
+                        />
+                      ) : isLoading ? (
+                        <Loading />
+                      ) : (
+                        <OpenList />
+                      )
+                    }
+                  />
+                </Routes>
+                <Footer />
+              </LanguageContext.Provider>
+            </WishListIdContext.Provider>
+          </AuthorizedContext.Provider>
+        </AdminContext.Provider>
+      </LoadingContext.Provider>
     </BrowserRouter>
   );
 }

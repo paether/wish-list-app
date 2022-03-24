@@ -34,7 +34,6 @@ const id_delete = async (req, res) => {
       await deleteWishListItem(req.params.id, req.params.itemid);
       res.status(200).json({ status: 'ok' });
     } catch (error) {
-      console.log(error);
       res.status(500).json(error);
     }
   } else {
@@ -58,7 +57,6 @@ const id_put = async (req, res) => {
 
       res.status(200).json({ status: 'ok' });
     } catch (error) {
-      console.log(error);
       res.status(500).json(error);
     }
   } else {
