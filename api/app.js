@@ -1,15 +1,15 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-
-const port = 8800;
-const dotenv = require('dotenv');
+const helmet = require('helmet');
 const jwt = require('jsonwebtoken');
 
-dotenv.config();
+// eslint-disable-next-line global-require
+if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
+const port = process.env.PORT;
 const app = express();
-app.use(cors());
+
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
   cors: { origin: 'http://localhost:3000' },
@@ -52,6 +52,8 @@ io.on('connection', async (socket) => {
 });
 
 app.use(express.json());
+app.use(cors());
+app.use(helmet());
 
 app.use('/api/auth', authRouter);
 app.use('/api/wishList', wishListRouter);

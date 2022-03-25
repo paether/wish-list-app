@@ -1,5 +1,4 @@
 /* eslint-disable consistent-return */
-const dotenv = require('dotenv');
 const { v4: uuidv4 } = require('uuid');
 const { initializeApp } = require('firebase/app');
 const {
@@ -19,8 +18,6 @@ const {
   deleteDoc,
 } = require('firebase/firestore');
 const { getAuth, signInAnonymously } = require('firebase/auth');
-
-dotenv.config();
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
