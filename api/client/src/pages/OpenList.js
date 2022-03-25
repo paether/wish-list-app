@@ -1,7 +1,7 @@
 import "./OpenList.css";
 import WishListForm from "../components/WishListForm";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import {axiosInstance} from "../config"
 import lang from "../translation";
 
 import {
@@ -59,8 +59,8 @@ export default function OpenList() {
       }
 
       try {
-        const response = await axios.post(
-          "http://localhost:8800/api/auth/login",
+        const response = await axiosInstance.post(
+          "/auth/login",
           {
             listId: listId,
             password: secretKeyElement.current.value,
@@ -73,7 +73,7 @@ export default function OpenList() {
           setIsAdmin(true);
         }
         setWishListId(listId);
-        navigate(`/wish-list-app/wishList?listId=${listId}`);
+        navigate(`/wishList?listId=${listId}`);
       } catch (error) {
         console.log(error);
       }

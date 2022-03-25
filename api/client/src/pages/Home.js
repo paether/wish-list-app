@@ -49,7 +49,7 @@ export default function Home() {
         <button
           onClick={() =>
             handleButtonClick(
-              "/wish-list-app/create",
+              "/create",
               ".header-item.create-list"
             )
           }
@@ -64,8 +64,8 @@ export default function Home() {
           onClick={() =>
             handleButtonClick(
               wishListId
-                ? `/wish-list-app/wishList?listId=${wishListId}`
-                : "/wish-list-app/wishList",
+                ? `/wishList?listId=${wishListId}`
+                : "/wishList",
               ".header-item.open-list"
             )
           }

@@ -10,11 +10,8 @@ body {
   box-sizing: border-box;
   margin: 0;
   font-family: "Red Hat Display", sans-serif;
-  min-width: 100vw;
-  min-height: 100vh;
 }
 #root {
-  min-width: 100vw;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

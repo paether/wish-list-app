@@ -2,7 +2,8 @@ import ListItems from "./ListItems";
 import { useEffect, useState, useContext, useRef } from "react";
 import "./WishListMenu.css";
 import NotAuthorized from "./NotAuthorized";
-import axios from "axios";
+import {axiosInstance} from "../config"
+
 import lang from "../translation";
 import Loading from "../pages/Loading";
 
@@ -29,8 +30,8 @@ export default function WishListMenu() {
   const getListName = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get(
-        "http://localhost:8800/api/wishList/" + wishListId,
+      const response = await axiosInstance.get(
+        "/wishList/" + wishListId,
         {
           headers: {
             token: "Bearer " + token,
@@ -83,8 +84,8 @@ export default function WishListMenu() {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8800/api/auth/login",
+      const response = await axiosInstance.post(
+        "/auth/login",
         {
           listId: wishListId,
           password: secretKeyElement.current.value,

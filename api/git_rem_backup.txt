@@ -1,0 +1,2 @@
+heroku	https://git.heroku.com/paether-wishlistapp.git (fetch)
+heroku	https://git.heroku.com/paether-wishlistapp.git (push)

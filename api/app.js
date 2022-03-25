@@ -3,16 +3,17 @@ const http = require('http');
 const cors = require('cors');
 const helmet = require('helmet');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 
 // eslint-disable-next-line global-require
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8800;
 const app = express();
 
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
-  cors: { origin: 'http://localhost:3000' },
+  cors: { origin: 'https://paether-wishlistapp.herokuapp.com' },
 });
 const {
   authenticateAnonymously,
@@ -58,8 +59,10 @@ app.use(helmet());
 app.use('/api/auth', authRouter);
 app.use('/api/wishList', wishListRouter);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.use(express.static(path.join(__dirname, '/client/build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
 });
 
 server.listen(port, () => {

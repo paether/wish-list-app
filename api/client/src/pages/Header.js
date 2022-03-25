@@ -59,7 +59,7 @@ export default function Header() {
       <div className="header-container ">
         <div
           className="logo"
-          onClick={() => handleClick(home, "/wish-list-app")}
+          onClick={() => handleClick(home, "/")}
         ></div>
         <ul>
           <li className="flag-container">
@@ -75,7 +75,7 @@ export default function Header() {
             ></div>
           </li>
           <li
-            onClick={() => handleClick(home, "/wish-list-app")}
+            onClick={() => handleClick(home, "/")}
             className="header-item home"
             ref={home}
           >
@@ -86,8 +86,8 @@ export default function Header() {
               handleClick(
                 open,
                 wishListId
-                  ? `/wish-list-app/wishList?listId=${wishListId}`
-                  : "/wish-list-app/wishList"
+                  ? `/wishList?listId=${wishListId}`
+                  : "/wishList"
               )
             }
             ref={open}
@@ -96,14 +96,14 @@ export default function Header() {
             {lang[language].header_open}
           </li>
           <li
-            onClick={() => handleClick(create, "/wish-list-app/create")}
+            onClick={() => handleClick(create, "/create")}
             className="header-item create-list"
             ref={create}
           >
             {lang[language].header_create}
           </li>
           <li
-            onClick={() => handleClick(about, "/wish-list-app/about")}
+            onClick={() => handleClick(about, "/about")}
             className="header-item about"
             ref={about}
           >

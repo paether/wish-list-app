@@ -3,8 +3,8 @@ import "./AddEditListItem.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { WishListIdContext, LanguageContext } from "../context";
-import axios from "axios";
 import lang from "../translation";
+import {axiosInstance} from "../config"
 
 export default function AddlistItem({
   itemNameElement,
@@ -76,8 +76,8 @@ export default function AddlistItem({
       };
 
       if (!editData) {
-        await axios.post(
-          "http://localhost:8800/api/wishList/" + wishListId,
+        await axiosInstance.post(
+          "/wishList/" + wishListId,
           data,
           header
         );
@@ -86,8 +86,8 @@ export default function AddlistItem({
         pictureUrlElement.current.value = "";
         itemDescElement.current.value = "";
       } else {
-        await axios.put(
-          `http://localhost:8800/api/wishList/${wishListId}/item/${editData.id}`,
+        await axiosInstance.put(
+          `/wishList/${wishListId}/item/${editData.id}`,
           data,
           header
         );

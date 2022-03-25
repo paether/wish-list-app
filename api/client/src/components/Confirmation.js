@@ -1,8 +1,10 @@
 import { useEffect, useContext } from "react";
 import { WishListIdContext, LanguageContext } from "../context";
 import "./Confirmation.css";
-import axios from "axios";
+import {axiosInstance} from "../config"
+
 import lang from "../translation";
+
 
 export default function Confirmation(props) {
   const [wishListId] = useContext(WishListIdContext);
@@ -11,8 +13,8 @@ export default function Confirmation(props) {
   const handleBuyConfirmation = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
-        `http://localhost:8800/api/wishList/${wishListId}/item/${props.listItem.id}/status`,
+      await axiosInstance.put(
+        `/wishList/${wishListId}/item/${props.listItem.id}/status`,
         {
           reserved: false,
           bought: true,
@@ -32,8 +34,8 @@ export default function Confirmation(props) {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(
-        `http://localhost:8800/api/wishList/${wishListId}/item/${props.listItem.id}`,
+      await axiosInstance.delete(
+        `/wishList/${wishListId}/item/${props.listItem.id}`,
         {
           headers: {
             token: "Bearer " + token,

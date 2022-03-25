@@ -50,15 +50,15 @@ function App() {
                 <Header />
                 <Routes>
                   <Route
-                    path="/wish-list-app"
+                    path="/"
                     element={<Home {...{ language }} />}
                   />
                   <Route
-                    path="/wish-list-app/create"
+                    path="/create"
                     element={<CreateWishList {...{ onWhishListCreation }} />}
                   />
                   <Route
-                    path="/wish-list-app/wishList"
+                    path="/wishList"
                     element={
                       wishListId && !isLoading ? (
                         <WishListMenu

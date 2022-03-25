@@ -11,7 +11,7 @@ import "./ListItems.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift, faEye } from "@fortawesome/free-solid-svg-icons";
 import AddEditlistItem from "./AddEditListItem";
-import axios from "axios";
+import {axiosInstance} from "../config"
 import { io } from "socket.io-client";
 import lang from "../translation";
 
@@ -95,8 +95,8 @@ export default function ListItems() {
   const handleReserve = async (listItemId, reserved, bought) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
-        `http://localhost:8800/api/wishList/${wishListId}/item/${listItemId}/status`,
+      await axiosInstance.put(
+        `/wishList/${wishListId}/item/${listItemId}/status`,
         {
           reserved,
           bought,
@@ -124,8 +124,8 @@ export default function ListItems() {
     }
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.post(
-        "http://localhost:8800/api/auth/adminlogin/" + wishListId,
+      const response = await axiosInstance.post(
+        "/auth/adminlogin/" + wishListId,
         {
           adminPassword: adminKeyElement.current.value,
         },
@@ -161,7 +161,7 @@ export default function ListItems() {
   //real-time list data updating
   const fetchItems = useCallback(() => {
     const token = localStorage.getItem("token");
-    const socket = io("http://localhost:8800", {
+    const socket = io("https://paether-wishlistapp.herokuapp.com", {
       auth: { token },
       query: {
         wishListId: wishListId,
