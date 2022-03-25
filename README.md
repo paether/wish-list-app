@@ -8,6 +8,7 @@ Skills I have learnt and improved during this project:
 - Using the React Context API for deep nested states.
 - Axios for backend API CRUD methods.
 - Firebase querying
+- Authentication using bcrypt, JWT
 - Socket.io for real-time database updates, which enables frontend data update without the need of refreshing the page.
 - Practicing the Router/Controller layout for express. (since I have used React the need of Views was not required)
 - Practice how code review works on GitHub with the help of one of my friends
