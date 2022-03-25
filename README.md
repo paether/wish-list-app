@@ -23,3 +23,7 @@ Technologies used:
 - HTML5 / CSS
 - Node.js / Express
 - Firebase
+
+The site is currently hosted at:
+
+https://paether-wishlistapp.herokuapp.com/
