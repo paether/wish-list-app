@@ -21,15 +21,6 @@ export default function CreateWishList({ onWhishListCreation, isLoading }) {
     element.reportValidity();
   };
 
-  const setActiveHeader = (headerClass) => {
-    const headerItems = [...document.querySelectorAll(".header-item")];
-    headerItems
-      .find((item) => item.classList.contains("active"))
-      ?.classList.remove("active");
-    const openHeaderItem = document.querySelector(headerClass);
-    openHeaderItem.classList.add("active");
-  };
-
   const createWishList = useCallback(
     async (e) => {
       e.preventDefault();
@@ -56,7 +47,7 @@ export default function CreateWishList({ onWhishListCreation, isLoading }) {
             adminPassword: adminKeyElement.current.value,
           }
         );
-        setActiveHeader(".open-list");
+
         onWhishListCreation(response.data.listId, response.data.token);
         navigate("/wishList?listId=" + response.data.listId);
       } catch (error) {

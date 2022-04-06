@@ -10,13 +10,7 @@ export default function Home() {
   const [wishListId] = useContext(WishListIdContext);
   const [language] = useContext(LanguageContext);
 
-  const handleButtonClick = (path, className) => {
-    const homeHeader = document.querySelector(".header-item.home");
-    const headerElement = document.querySelector(className);
-
-    homeHeader.classList.remove("active");
-    headerElement.classList.add("active");
-
+  const handleButtonClick = (path) => {
     navigate(path);
   };
 
@@ -49,8 +43,7 @@ export default function Home() {
         <button
           onClick={() =>
             handleButtonClick(
-              "/create",
-              ".header-item.create-list"
+              "/create"
             )
           }
           className="home-button create"
@@ -65,8 +58,7 @@ export default function Home() {
             handleButtonClick(
               wishListId
                 ? `/wishList?listId=${wishListId}`
-                : "/wishList",
-              ".header-item.open-list"
+                : "/wishList"
             )
           }
           className="home-button open"
