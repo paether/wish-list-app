@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./Header.css";
@@ -11,18 +11,13 @@ export default function Header() {
   const [language, setLanguage] = useContext(LanguageContext);
   const navigate = useNavigate();
 
-  const huFlag = useRef(null);
-  const gbFlag = useRef(null);
-
-  useEffect(() => {
-    if (language === "en") {
-      gbFlag.current.classList.add("active");
-      huFlag.current.classList.remove("active");
-    } else {
-      huFlag.current.classList.add("active");
-      gbFlag.current.classList.remove("active");
-    }
-  }, [language]);
+  const createFlagClassName = useCallback(
+    (languageClass) =>
+      ["flag", languageClass, language === languageClass ? "active" : ""].join(
+        " "
+      ),
+    [language]
+  );
 
   return (
     <div className="header">
@@ -31,13 +26,11 @@ export default function Header() {
         <ul>
           <li className="flag-container">
             <div
-              className="flag hu"
-              ref={huFlag}
+              className={createFlagClassName("hu")}
               onClick={() => setLanguage("hu")}
             ></div>
             <div
-              className="flag gb"
-              ref={gbFlag}
+              className={createFlagClassName("en")}
               onClick={() => setLanguage("en")}
             ></div>
           </li>
