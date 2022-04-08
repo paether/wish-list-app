@@ -3,9 +3,8 @@
   position: relative;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  gap: 30px;
   align-items: flex-start;
+  gap: 30px;
   background: #00a9bb;
   padding: 50px 100px;
   border: 3px solid black;
@@ -66,14 +65,14 @@ label {
   background: #001f36;
   border: 1px solid black;
   border-radius: 0.25em;
-  bottom: 120%;
+  bottom: 130%;
   color: #edeff0;
   content: attr(data-tool-tip);
-  margin-left: -8.75em;
+  margin-right: -8.75em;
   padding: 1em;
   transition: all 0.35s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
   transform: scale(0.6) translateY(50%);
-  width: 17.5em;
+  /* width: 17.5em; */
 }
 
 .tooltip:hover::after,
@@ -84,7 +83,6 @@ label {
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
-  align-items: flex-start;
   gap: 5px;
 }
 .fa-circle-question,
@@ -110,7 +108,7 @@ label {
   border: none;
   background-color: #0059dd;
   border-bottom: 5px solid #001f36;
-  min-width: 250px;
+
   padding-left: 5px;
   outline: none;
   color: white;
@@ -119,4 +117,30 @@ label {
 
 .form-input:focus {
   border-bottom: 5px solid white;
+}
+
+@media (max-width: 700px) {
+  .wish-list-form-container {
+    padding: 20px 50px;
+  }
+  .form-input {
+    min-width: none;
+  }
+  .tooltip::after {
+    margin-left: -8.75em;
+    margin-right: 0;
+  }
+  label {
+    font-size: 1rem;
+  }
+}
+@media (max-width: 500px) {
+  .wish-list-form-container {
+    padding: 10px 20px;
+  }
+}
+@media (min-width: 701px) {
+  .form-input {
+    min-width: 250px;
+  }
 }

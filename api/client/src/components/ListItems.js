@@ -11,7 +11,7 @@ import "./ListItems.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGift, faEye } from "@fortawesome/free-solid-svg-icons";
 import AddEditlistItem from "./AddEditListItem";
-import {axiosInstance} from "../config"
+import { axiosInstance } from "../config";
 import { io } from "socket.io-client";
 import lang from "../translation";
 
@@ -55,12 +55,13 @@ export default function ListItems() {
       itemDescElement.current.value = "";
     }
     addItemContainerElement.current.style.display = "flex";
-
     addItemWindowElement.current.classList.add("appear");
+    document.body.style.overflow = "hidden";
     addItemContainerElement.current.addEventListener("click", (e) => {
       if (e.target.className === "add-item-container") {
         addItemContainerElement.current.style.display = "none";
         addItemWindowElement.current.classList.remove("appear");
+        document.body.style.overflow = "scroll";
       }
     });
   };

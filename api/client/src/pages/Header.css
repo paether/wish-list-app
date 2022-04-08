@@ -14,8 +14,8 @@
 .logo {
   cursor: pointer;
   margin-right: auto;
-  width: 70px;
-  height: 70px;
+  min-width: 70px;
+  min-height: 70px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -24,7 +24,8 @@
 
 .header-container > ul {
   display: flex;
-  gap: 20px;
+  padding: 0;
+  gap: 10px;
 }
 .header-item {
   cursor: pointer;
@@ -80,6 +81,111 @@ li {
 .flag.en {
   background-image: url("../../public/assets/gb.svg");
 }
-.flag.active {
+.active-flag {
   opacity: 1;
+}
+.hamburger {
+  display: none;
+}
+input[type="checkbox"] {
+  display: none;
+}
+.wrapper {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1;
+  top: 0;
+  right: -100%;
+  height: 100%;
+  width: 100%;
+  /*background: linear-gradient(-135deg, #c850c0, #4158d0);*/
+  /* background: linear-gradient(375deg, #1cc7d0, #2ede98); */
+  /* background: linear-gradient(-45deg, #e3eefe 0%, #efddfb 100%);*/
+  /* clip-path: circle(25px at calc(0% + 45px) 45px); */
+  background: #001220;
+  transition: right 0.4s ease-out;
+  /* clip-path: circle(25px at calc(100% - 45px) 45px); */
+}
+.wrapper > ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+}
+#active:checked ~ .wrapper {
+  right: 0;
+  transition: all 0.5s cubic-bezier(0.55, 1.47, 0.48, 0.48);
+
+  /* clip-path: circle(75%); */
+}
+
+#active:checked ~ .menu-btn .ham-not-visible {
+  opacity: 1;
+  display: block;
+}
+#active:checked ~ .menu-btn .ham-visible {
+  opacity: 0;
+  display: none;
+}
+
+#active:not(:checked) ~ .menu-btn .ham-not-visible {
+  opacity: 0;
+  display: none;
+}
+#active:not(:checked) ~ .menu-btn .ham-visible {
+  opacity: 1;
+  display: block;
+}
+.menu-btn {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+  background: #004cbb;
+  transition: all 0.3s ease-in-out;
+}
+
+@keyframes rotate {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+@media (max-width: 700px) {
+  .hamburger {
+    display: block;
+  }
+  .header-container > ul > li {
+    display: none;
+  }
+  .header-container {
+    padding: 20px 10px 0px 30px;
+  }
+  .custom-shape-divider-top-1646235534 svg {
+    position: relative;
+    display: block;
+    height: 50px;
+  }
+}
+
+@media (max-width: 800px) {
+  .header-container {
+    padding: 20px 50px;
+  }
 }
