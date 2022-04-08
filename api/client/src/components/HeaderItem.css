@@ -1,0 +1,13 @@
+.header-item {
+  cursor: pointer;
+  padding: 8px;
+  border: 1px solid transparent;
+}
+
+.header-item:hover {
+  border: 1px solid white;
+}
+
+.active {
+  border: 1px solid white;
+}

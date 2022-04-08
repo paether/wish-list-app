@@ -1,114 +1,53 @@
+import { useCallback, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./Header.css";
 import lang from "../translation";
-import { useContext, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { WishListIdContext, LanguageContext } from "../context";
+import HeaderItem from "../components/HeaderItem";
 
 export default function Header() {
   const [wishListId] = useContext(WishListIdContext);
   const [language, setLanguage] = useContext(LanguageContext);
-
-  const huFlag = useRef(null);
-  const gbFlag = useRef(null);
-  const home = useRef(null);
-  const open = useRef(null);
-  const create = useRef(null);
-  const about = useRef(null);
-
   const navigate = useNavigate();
 
-  const handleClick = (ref, path) => {
-    home.current.classList.remove("active");
-    open.current.classList.remove("active");
-    create.current.classList.remove("active");
-    about.current.classList.remove("active");
-
-    navigate(path);
-    ref.current.classList.add("active");
-  };
-
-  useEffect(() => {
-    const currentLoc = window.location.href;
-    if (currentLoc.includes("/wishList")) {
-      open.current.classList.add("active");
-    } else if (currentLoc.includes("/create")) {
-      create.current.classList.add("active");
-    } else if (currentLoc.includes("/about")) {
-      about.current.classList.add("active");
-    } else {
-      home.current.classList.add("active");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (language === "en") {
-      gbFlag.current.classList.add("active");
-      huFlag.current.classList.remove("active");
-    } else {
-      huFlag.current.classList.add("active");
-      gbFlag.current.classList.remove("active");
-    }
-  }, [language]);
-
-  const changeLang = (lang) => {
-    setLanguage(lang);
-  };
+  const createFlagClassName = useCallback(
+    (languageClass) =>
+      ["flag", languageClass, language === languageClass ? "active" : ""].join(
+        " "
+      ),
+    [language]
+  );
 
   return (
     <div className="header">
       <div className="header-container ">
-        <div
-          className="logo"
-          onClick={() => handleClick(home, "/")}
-        ></div>
+        <div className="logo" onClick={() => navigate("/")}></div>
         <ul>
           <li className="flag-container">
             <div
-              className="flag hu"
-              ref={huFlag}
-              onClick={() => changeLang("hu")}
+              className={createFlagClassName("hu")}
+              onClick={() => setLanguage("hu")}
             ></div>
             <div
-              className="flag gb"
-              ref={gbFlag}
-              onClick={() => changeLang("en")}
+              className={createFlagClassName("en")}
+              onClick={() => setLanguage("en")}
             ></div>
           </li>
-          <li
-            onClick={() => handleClick(home, "/")}
-            className="header-item home"
-            ref={home}
+          <HeaderItem path="/">
+            <li>{lang[language].header_home}</li>
+          </HeaderItem>
+          <HeaderItem
+            path={wishListId ? `/wishList?listId=${wishListId}` : "/wishList"}
           >
-            {lang[language].header_home}
-          </li>
-          <li
-            onClick={() =>
-              handleClick(
-                open,
-                wishListId
-                  ? `/wishList?listId=${wishListId}`
-                  : "/wishList"
-              )
-            }
-            ref={open}
-            className="header-item open-list"
-          >
-            {lang[language].header_open}
-          </li>
-          <li
-            onClick={() => handleClick(create, "/create")}
-            className="header-item create-list"
-            ref={create}
-          >
-            {lang[language].header_create}
-          </li>
-          <li
-            onClick={() => handleClick(about, "/about")}
-            className="header-item about"
-            ref={about}
-          >
-            {lang[language].header_about}
-          </li>
+            <li> {lang[language].header_open}</li>
+          </HeaderItem>
+          <HeaderItem path="/create">
+            <li> {lang[language].header_create}</li>
+          </HeaderItem>
+          <HeaderItem path="/about">
+            <li> {lang[language].header_about}</li>
+          </HeaderItem>
         </ul>
       </div>
       <div className="custom-shape-divider-top-1646235534">
