@@ -1,0 +1,22 @@
+.footer-container {
+  display: flex;
+  margin-top: auto;
+  width: 100vw;
+  font-size: 1rem;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  background-color: #001220;
+  color: white;
+  gap: 20px;
+}
+.footer-container > a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.github-logo {
+  color: white;
+  width: 1.4rem;
+  height: 1.4rem;
+}
