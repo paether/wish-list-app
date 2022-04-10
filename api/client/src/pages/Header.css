@@ -87,7 +87,7 @@ li {
 .hamburger {
   display: none;
 }
-input[type="checkbox"] {
+.hamburger input[type="checkbox"] {
   display: none;
 }
 .wrapper {

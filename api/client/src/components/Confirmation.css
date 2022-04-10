@@ -8,6 +8,7 @@
   left: 0px;
   width: 100%;
   height: 100%;
+  overflow: scroll;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 99;
 }
@@ -17,6 +18,7 @@
   display: flex;
   flex-direction: column;
   padding: 45px;
+  margin: 20px;
   position: relative;
   align-items: center;
   justify-content: center;
@@ -87,4 +89,20 @@
   user-select: none;
   -webkit-user-select: none;
   border-radius: 5px;
+}
+@media (max-width: 500px) {
+  .confirm-buy-window {
+    padding: 1rem;
+  }
+  .confirm-buy-window > h2 {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  .confirm-button-container {
+    flex-direction: column;
+  }
+  .confirm-item {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
 }

@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   AdminContext,
   AuthorizedContext,
@@ -49,10 +49,7 @@ function App() {
               <LanguageContext.Provider value={[language, setLanguage]}>
                 <Header />
                 <Routes>
-                  <Route
-                    path="/"
-                    element={<Home {...{ language }} />}
-                  />
+                  <Route path="/" element={<Home {...{ language }} />} />
                   <Route
                     path="/create"
                     element={<CreateWishList {...{ onWhishListCreation }} />}

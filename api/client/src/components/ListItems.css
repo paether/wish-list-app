@@ -38,7 +38,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: 0;
+  max-width: 200px;
   word-break: break-all;
   gap: 5px;
   height: 100%;
@@ -221,5 +221,20 @@ a:active {
   }
   to {
     transform: scale(100%);
+  }
+}
+
+@media (max-width: 1000px) {
+  .list-items {
+    display: inline-grid;
+    grid-template-columns: auto;
+    justify-items: center;
+    align-items: center;
+  }
+}
+@media (max-width: 500px) {
+  .label-reserved,
+  .label-bought {
+    font-size: 2rem;
   }
 }

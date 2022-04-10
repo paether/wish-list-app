@@ -49,3 +49,23 @@
   width: calc(100% - 1px);
   height: calc(100% - 1px);
 }
+
+@media (max-width: 700px) {
+  .wish-list-menu-container > h1 {
+    font-size: 3rem;
+  }
+  .wish-list-menu-container > h2 {
+    font-size: 1.5rem;
+  }
+}
+@media (max-width: 500px) {
+  .wish-list-menu-container > h1 {
+    font-size: 2rem;
+  }
+  .wish-list-menu-container > h2 {
+    font-size: 1.2rem;
+  }
+  .list-area {
+    padding: 10px;
+  }
+}

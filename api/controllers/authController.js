@@ -38,10 +38,10 @@ const login_post = async (req, res) => {
     let isAdmin = false;
     await authenticateAnonymously();
     const wishListDoc = await getWishList(req.body.listId);
-    const password = await bcrypt.compare(req.body.password, wishListDoc.data().secretKey);
     if (!wishListDoc.data()) {
       return res.status(404).json('This list ID does not exist!');
     }
+    const password = await bcrypt.compare(req.body.password, wishListDoc.data().secretKey);
     if (!password) {
       return res.status(401).json('Bad password!');
     }
@@ -52,7 +52,7 @@ const login_post = async (req, res) => {
         wishListDoc.data().adminSecretKey,
       );
       if (!adminPassword) {
-        return res.status(401).json('Bad admin password!');
+        return res.status(401).json('Bad password!');
       }
     }
 

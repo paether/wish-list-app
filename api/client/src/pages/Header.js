@@ -13,7 +13,6 @@ export default function Header() {
   const [language, setLanguage] = useContext(LanguageContext);
   const navigate = useNavigate();
   const hamburgerSwitch = useRef(null);
-
   const navBarItemClick = () => {
     if (hamburgerSwitch.current.checked) {
       hamburgerSwitch.current.checked = false;
@@ -66,9 +65,7 @@ export default function Header() {
           <HeaderItem path="/create">
             <li> {lang[language].header_create}</li>
           </HeaderItem>
-          <HeaderItem path="/about">
-            <li> {lang[language].header_about}</li>
-          </HeaderItem>
+    
           <div className="hamburger">
             <input
               onChange={hamburgerChanged}
@@ -95,9 +92,7 @@ export default function Header() {
                 <HeaderItem path="/create">
                   <li>{lang[language].header_create}</li>
                 </HeaderItem>
-                <HeaderItem path="/about">
-                  <li>{lang[language].header_about}</li>
-                </HeaderItem>
+               
               </ul>
             </div>
           </div>

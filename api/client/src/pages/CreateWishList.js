@@ -3,7 +3,7 @@ import Loading from "./Loading";
 import "./CreateWishList.css";
 import WishListForm from "../components/WishListForm";
 import { useNavigate } from "react-router-dom";
-import {axiosInstance} from "../config"
+import { axiosInstance } from "../config";
 import { LanguageContext } from "../context";
 import lang from "../translation";
 
@@ -39,16 +39,14 @@ export default function CreateWishList({ onWhishListCreation, isLoading }) {
       }
 
       try {
-        const response = await axiosInstance.post(
-          "/auth/create",
-          {
-            listName: listIdName.current.value,
-            password: secretKeyElement.current.value,
-            adminPassword: adminKeyElement.current.value,
-          }
-        );
+        const response = await axiosInstance.post("/auth/create", {
+          listName: listIdName.current.value,
+          password: secretKeyElement.current.value,
+          adminPassword: adminKeyElement.current.value,
+        });
 
         onWhishListCreation(response.data.listId, response.data.token);
+
         navigate("/wishList?listId=" + response.data.listId);
       } catch (error) {
         console.log(error);

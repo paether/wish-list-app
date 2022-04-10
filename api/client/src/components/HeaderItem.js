@@ -6,6 +6,7 @@ import "./HeaderItem.css";
 const HeaderItem = ({ path, children }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
   const className = useMemo(
     () => `header-item${pathname === path ? " active" : ""}`,
     [path, pathname]

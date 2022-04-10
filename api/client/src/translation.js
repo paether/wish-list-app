@@ -8,7 +8,6 @@ const lang = {
     header_home: "Főoldal",
     header_open: "Megnyitás",
     header_create: "új lista",
-    header_about: "Rólunk",
     error_url: "Szükséges egy link amely az ajándékra hivatkozik!",
     error_url_invalid: "A megadott link nem létezik!",
     error_access: "Add meg a lista jelszavát, hogy hozzáférj!",
@@ -68,7 +67,6 @@ const lang = {
     header_home: "Home",
     header_open: "Open",
     header_create: "Create",
-    header_about: "About",
     error_access: "You need to provide a password to access this list",
     error_url_invalid: "The URL provided is not valid!",
 
