@@ -47,7 +47,7 @@ export default function CreateWishList({ onWhishListCreation, isLoading }) {
 
         onWhishListCreation(response.data.listId, response.data.token);
 
-        navigate("/wishList?listId=" + response.data.listId);
+        navigate("/wishList");
       } catch (error) {
         console.log(error);
       }

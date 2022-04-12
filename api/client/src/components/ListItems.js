@@ -74,7 +74,7 @@ export default function ListItems() {
     };
   }, []);
   const handleCopytoClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(wishListId);
     copyButtonElement.current.classList.add("copied");
 
     setTimeout(() => {

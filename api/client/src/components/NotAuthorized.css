@@ -175,3 +175,8 @@
 .switch-button-checkbox + .switch-button-label .switch-button-label-span {
   position: relative;
 }
+@media (max-width:500px){
+  .access-button{
+    font-size: 1rem;
+  }
+}

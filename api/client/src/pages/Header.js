@@ -57,15 +57,13 @@ export default function Header() {
           <HeaderItem path="/">
             <li>{lang[language].header_home}</li>
           </HeaderItem>
-          <HeaderItem
-            path={wishListId ? `/wishList?listId=${wishListId}` : "/wishList"}
-          >
+          <HeaderItem path={"/wishList"}>
             <li> {lang[language].header_open}</li>
           </HeaderItem>
           <HeaderItem path="/create">
             <li> {lang[language].header_create}</li>
           </HeaderItem>
-    
+
           <div className="hamburger">
             <input
               onChange={hamburgerChanged}
@@ -92,7 +90,6 @@ export default function Header() {
                 <HeaderItem path="/create">
                   <li>{lang[language].header_create}</li>
                 </HeaderItem>
-               
               </ul>
             </div>
           </div>

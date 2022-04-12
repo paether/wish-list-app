@@ -1,10 +1,9 @@
 import { useEffect, useContext } from "react";
 import { WishListIdContext, LanguageContext } from "../context";
 import "./Confirmation.css";
-import {axiosInstance} from "../config"
+import { axiosInstance } from "../config";
 
 import lang from "../translation";
-
 
 export default function Confirmation(props) {
   const [wishListId] = useContext(WishListIdContext);

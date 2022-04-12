@@ -2,7 +2,7 @@ import ListItems from "./ListItems";
 import { useEffect, useState, useContext, useRef } from "react";
 import "./WishListMenu.css";
 import NotAuthorized from "./NotAuthorized";
-import {axiosInstance} from "../config"
+import { axiosInstance } from "../config";
 
 import lang from "../translation";
 import Loading from "../pages/Loading";
@@ -20,7 +20,7 @@ export default function WishListMenu() {
 
   const [, setIsAdmin] = useContext(AdminContext);
   const [isAuthorized, setIsAuthorized] = useContext(AuthorizedContext);
-  const [wishListId] = useContext(WishListIdContext);
+  const [wishListId, setWishListId] = useContext(WishListIdContext);
   const [language] = useContext(LanguageContext);
 
   const secretKeyElement = useRef(null);
@@ -30,14 +30,11 @@ export default function WishListMenu() {
   const getListName = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axiosInstance.get(
-        "/wishList/" + wishListId,
-        {
-          headers: {
-            token: "Bearer " + token,
-          },
-        }
-      );
+      const response = await axiosInstance.get("/wishList/" + wishListId, {
+        headers: {
+          token: "Bearer " + token,
+        },
+      });
       setListName(response.data);
     } catch (error) {
       console.log("cannot get listname");
@@ -84,14 +81,11 @@ export default function WishListMenu() {
     }
 
     try {
-      const response = await axiosInstance.post(
-        "/auth/login",
-        {
-          listId: wishListId,
-          password: secretKeyElement.current.value,
-          adminPassword: adminKeyElementValue,
-        }
-      );
+      const response = await axiosInstance.post("/auth/login", {
+        listId: wishListId,
+        password: secretKeyElement.current.value,
+        adminPassword: adminKeyElementValue,
+      });
       localStorage.setItem("token", response.data.token);
       setIsAuthorized(true);
       if (adminKeyElementValue) {
@@ -125,6 +119,17 @@ export default function WishListMenu() {
         <h2>{lang[language].menu_header2}</h2>
         <div className="list-name">{listName}</div>
         {isAuthorized && <ListItems />}
+        <div className="open-another-list">
+          <button
+            className="open-another-list-btn"
+            data-tool-tip={lang[language].list_copied}
+            onClick={() => {
+              setWishListId(null);
+            }}
+          >
+            {lang[language].menu_open_another}
+          </button>
+        </div>
       </div>
     );
   }

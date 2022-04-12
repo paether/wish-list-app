@@ -1,7 +1,7 @@
 import "./OpenList.css";
 import WishListForm from "../components/WishListForm";
 import { useNavigate } from "react-router-dom";
-import {axiosInstance} from "../config"
+import { axiosInstance } from "../config";
 import lang from "../translation";
 
 import {
@@ -59,23 +59,21 @@ export default function OpenList() {
       }
 
       try {
-        const response = await axiosInstance.post(
-          "/auth/login",
-          {
-            listId: listId,
-            password: secretKeyElement.current.value,
-            adminPassword: adminKeyElementValue,
-          }
-        );
+        const response = await axiosInstance.post("/auth/login", {
+          listId: listId,
+          password: secretKeyElement.current.value,
+          adminPassword: adminKeyElementValue,
+        });
         localStorage.setItem("token", response.data.token);
         setIsAuthorized(true);
         if (adminKeyElementValue) {
           setIsAdmin(true);
         }
         setWishListId(listId);
-        navigate(`/wishList?listId=${listId}`);
+        navigate("/wishList");
       } catch (error) {
         console.log(error);
+        alert("Wrong list ID and/or password");
       }
     },
     [navigate, setIsAdmin, setIsAuthorized, setWishListId, language]

@@ -41,11 +41,7 @@ export default function Home() {
       </h1>
       <div className="home-options-container">
         <button
-          onClick={() =>
-            handleButtonClick(
-              "/create"
-            )
-          }
+          onClick={() => handleButtonClick("/create")}
           className="home-button create"
         >
           {lang[language].home_create}
@@ -56,9 +52,7 @@ export default function Home() {
         <button
           onClick={() =>
             handleButtonClick(
-              wishListId
-                ? `/wishList?listId=${wishListId}`
-                : "/wishList"
+              wishListId ? `/wishList?listId=${wishListId}` : "/wishList"
             )
           }
           className="home-button open"

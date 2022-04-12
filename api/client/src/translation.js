@@ -33,6 +33,7 @@ const lang = {
       "Az admin jelszóval lehetőséged lesz módosítani/törölni/hozzáadni a listádhoz ajándékokat!",
     menu_header1: "Üdvözöllek.",
     menu_header2: "Itt az ideje ajándékokat választani!",
+    menu_open_another: "Másik lista nyitása",
     list_admin_mode:
       "Kérlek add meg az admin jelszót, hogy admin módba tudj kapcsolni!",
     list_admin: "Admin jelszó",
@@ -94,6 +95,7 @@ const lang = {
       "With this password you will be able to add/delete/lock the list.",
     menu_header1: "Welcome.",
     menu_header2: "It's time to pick presents!",
+    menu_open_another: "Open another list",
     list_admin_mode:
       "Please provide the admin password to switch to admin mode:",
     list_admin: "Admin password",
