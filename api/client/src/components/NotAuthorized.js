@@ -20,8 +20,8 @@ export default function NotAuthorized({
   const [language] = useContext(LanguageContext);
 
   return (
-    <div className="not-authorized-container">
-      <form className="not-authorized-form">
+    <div className="open-list-container">
+      <form className="wish-list-form-container">
         <div className="switch-button">
           <input
             className="switch-button-checkbox"
@@ -34,15 +34,15 @@ export default function NotAuthorized({
             </span>
           </label>
         </div>
-        <div className="not-authorized-headline">
-          <h1>{lang[language].error_access}</h1>
-        </div>
+        <h1 className="not-authorized-headline">
+          {lang[language].error_access}
+        </h1>
 
         <div className="input-container">
           <label htmlFor="secret_key">{lang[language].form_password}</label>
-          <div className="input-flex">
+          <div className="input-item-container">
             <input
-              className="access-input"
+              className="form-input"
               type="password"
               onChange={(e) => {
                 e.target.setCustomValidity("");
@@ -62,9 +62,9 @@ export default function NotAuthorized({
         {showAdmin && (
           <div className="input-container">
             <label htmlFor="admin_key">{lang[language].form_admin}</label>
-            <div className="input-flex">
+            <div className="input-item-container">
               <input
-                className="access-input"
+                className="form-input"
                 type="password"
                 name="admin_key"
                 onChange={(e) => {

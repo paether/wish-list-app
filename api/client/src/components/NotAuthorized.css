@@ -83,6 +83,7 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  font-size: 2rem;
 }
 .access-item {
   background-color: #001f36;
@@ -175,8 +176,8 @@
 .switch-button-checkbox + .switch-button-label .switch-button-label-span {
   position: relative;
 }
-@media (max-width:500px){
-  .access-button{
+@media (max-width: 500px) {
+  .access-button {
     font-size: 1rem;
   }
 }

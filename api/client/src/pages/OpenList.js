@@ -52,11 +52,7 @@ export default function OpenList() {
         return;
       }
 
-      if (listIdInput.current.value.includes("listId")) {
-        listId = listIdInput.current.value.match(/(?<=listId=).*/)[0];
-      } else {
-        listId = listIdInput.current.value;
-      }
+      listId = listIdInput.current.value;
 
       try {
         const response = await axiosInstance.post("/auth/login", {
