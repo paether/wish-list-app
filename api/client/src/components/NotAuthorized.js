@@ -11,6 +11,7 @@ export default function NotAuthorized({
   secretKeyElement,
   showAdmin,
   handleLogin,
+  setWishListId
 }) {
   const handlePasswordVisibility = (ref) => {
     ref.current.type === "password"
@@ -86,7 +87,19 @@ export default function NotAuthorized({
         <button className="access-button" onClick={handleLogin}>
           {lang[language].list_acces}
         </button>
+        
       </form>
+       <div className="open-another-list">
+          <button
+            className="open-another-list-btn"
+            data-tool-tip={lang[language].list_copied}
+            onClick={() => {
+              setWishListId(null);
+            }}
+          >
+            {lang[language].menu_open_another}
+          </button>
+        </div>
     </div>
   );
 }

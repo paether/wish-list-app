@@ -119,6 +119,10 @@ label {
   border-bottom: 5px solid white;
 }
 
+.not-authorized-headline ~ .input-container {
+  align-self: center;
+}
+
 @media (max-width: 700px) {
   .wish-list-form-container {
     padding: 20px 50px;
@@ -133,7 +137,7 @@ label {
   label {
     font-size: 1rem;
   }
-  .submit-button-form{
+  .submit-button-form {
     font-size: 1rem;
   }
 }

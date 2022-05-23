@@ -4,6 +4,7 @@
   align-items: center;
   flex-direction: column;
   margin-bottom: 10rem;
+  gap: 30px;
 }
 .wish-list-menu-container > h1 {
   color: white;
@@ -16,7 +17,8 @@
   text-align: center;
   font-size: 2rem;
 }
-.list-name,.open-another-list {
+.list-name,
+.open-another-list {
   background: #00a9bb;
   padding: 0 20px 0 20px;
   display: flex;
@@ -26,7 +28,7 @@
   position: relative;
   margin-bottom: 2rem;
 }
-.open-another-list{
+.open-another-list {
   margin-top: 2rem;
   padding: 1rem;
 }
@@ -54,7 +56,7 @@
   width: calc(100% - 1px);
   height: calc(100% - 1px);
 }
-.open-another-list-btn{
+.open-another-list-btn {
   background-color: #001f36;
   cursor: pointer;
   color: white;
@@ -72,8 +74,8 @@
   border-radius: 20px;
   transition: transform 0.3s ease-in-out;
 }
-.open-another-list-btn:hover{
-  transform: scale(1.1), translateY(10deg)
+.open-another-list-btn:hover {
+  transform: scale(1.1), translateY(10deg);
 }
 
 @media (max-width: 700px) {

@@ -113,7 +113,7 @@ export default function AddlistItem({
           />
 
           <div className="new-item-container">
-            {editData ? (
+            {editData  && editData.pictureUrl? (
               <img
                 className="fa-gift"
                 src={editData.pictureUrl}

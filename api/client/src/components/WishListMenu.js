@@ -105,6 +105,7 @@ export default function WishListMenu() {
           showAdmin,
           toggleButtonElement,
           secretKeyElement,
+          setWishListId
         }}
       />
     );
