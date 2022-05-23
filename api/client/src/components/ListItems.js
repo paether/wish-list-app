@@ -162,7 +162,9 @@ export default function ListItems() {
   //real-time list data updating
   const fetchItems = useCallback(() => {
     const token = localStorage.getItem("token");
-    const socket = io("http://localhost:8800", {
+    const socket = io(process.env.NODE_ENV === "development"
+      ? "http://localhost:8800"
+      : "https://paether-wishlistapp.herokuapp.com", {
       auth: { token },
       query: {
         wishListId: wishListId,
