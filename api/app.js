@@ -23,7 +23,12 @@ io.use(socketAuth).on('connection', streamData);
 
 app.use(express.json());
 app.use(cors());
-app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+  useDefaults: true,
+  directives: {
+    'img-src': ["'self'", 'https: data:'],
+  },
+}));
 
 app.use('/api/auth', authRouter);
 app.use('/api/wishList', wishListRouter);
