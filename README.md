@@ -1,7 +1,5 @@
 The idea of the project came when I couldn't find a site that supported both english and hungarian languages and didn't require e-mail registration just to do a simple task as a wish list. So I have decided to make this site and add it to my portfolio.
 
-<hr>
-
 ## Main features
 
 - Create a wish list without the need to register (Firebase auth with bcrypt and JWT).
@@ -10,7 +8,7 @@ The idea of the project came when I couldn't find a site that supported both eng
 - Any changes on the wish list appeares on any other opened windows as well (socket.io websockets).
 - Switch between admin and non-admin mode with a password to be able to delete/update/add (CRUD) gifts.
 
-## Challenges solved
+## Challenges
 
 - Since I used a non-generic authentication with Firebase anonymous sessions I had to create my own unique version of
   handling users securely with the help of JWT tokens encrypted with bcrypt and stored on the backend.
@@ -26,8 +24,6 @@ The idea of the project came when I couldn't find a site that supported both eng
 - Node.js / Express
 - Axios
 - Firebase
-
-<hr>
 
 ## The site is currently hosted at:
 
