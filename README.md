@@ -3,6 +3,7 @@ The idea of the project came when I couldn't find a site that supported both eng
 ## Main features
 
 - Create a wish list without the need to register (Firebase auth with bcrypt and JWT).
+- Hungarian and English language support.
 - Add presents/items to de wish list if you are administrator of the list.
 - The list can be shared with other people who can indicate they have reserved/bought a gift.
 - Any changes on the wish list appeares on any other opened windows as well (socket.io websockets).
@@ -15,6 +16,7 @@ The idea of the project came when I couldn't find a site that supported both eng
 - Coordinating the multiple UI updates that are coming from different websockets through socket.io was quite a challange, React's useEffect and useCallback were a big help in solving them.
 - Firebase data handling are quite unique compared to mongoDB/T-SQL which I am already used to, so it was a good learning challange to find out how to query and store data with their special real-time snapshot updates with the help of their documentation.
 - I wanted to try out Heroku's node.js hosting which was challenging in the beginning but thanks to their detailed documentation I could solve it quickly.
+- I came up with the design of the site on my own as well which was also challenging in a way that I ad to it from the ground up, but it was worth it in the end also practiced a lot of CSS.
 
 ## Technologies used:
 
