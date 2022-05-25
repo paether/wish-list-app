@@ -2,28 +2,33 @@ The idea of the project came when I couldn't find a site that supported both eng
 
 <hr>
 
-Skills I have learnt and improved during this project:
+## Main features
 
-- The importance and the help of useCallback and useRef.
-- Using the React Context API for deep nested states.
-- Axios for backend API CRUD methods.
-- Firebase querying
-- Authentication using bcrypt, JWT
-- Socket.io for real-time database updates, which enables frontend data update without the need of refreshing the page.
-- Practicing the Router/Controller layout for express. (since I have used React the need of Views was not required)
-- Practice how code review works on GitHub with the help of one of my friends
-- How to prepare and deploy a fullstack app to Heroku.
+- Create a wish list without the need to register (Firebase auth with bcrypt and JWT).
+- Add presents/items to de wish list if you are administrator of the list.
+- The list can be shared with other people who can indicate they have reserved/bought a gift.
+- Any changes on the wish list appeares on any other opened windows as well (socket.io websockets).
+- Switch between admin and non-admin mode with a password to be able to delete/update/add (CRUD) gifts.
 
-<hr>
+## Challenges solved
 
-Technologies used:
+- Since I used a non-generic authentication with Firebase anonymous sessions I had to create my own unique version of
+  handling users securely with the help of JWT tokens encrypted with bcrypt and stored on the backend.
+- Coordinating the multiple UI updates that are coming from different websockets through socket.io was quite a challange, React's useEffect and useCallback were a big help in solving them.
+- Firebase data handling are quite unique compared to mongoDB/T-SQL which I am already used to, so it was a good learning challange to find out how to query and store data with their special real-time snapshot updates with the help of their documentation.
+- I wanted to try out Heroku's node.js hosting which was challenging in the beginning but thanks to their detailed documentation I could solve it quickly.
+
+## Technologies used:
 
 - React
 - Javascript
 - HTML5 / CSS
 - Node.js / Express
+- Axios
 - Firebase
 
-The site is currently hosted at:
+<hr>
+
+## The site is currently hosted at:
 
 https://paether-wishlistapp.herokuapp.com/
