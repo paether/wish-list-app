@@ -22,6 +22,7 @@ The idea of the project came when I couldn't find a site that supported both eng
 - Javascript
 - HTML5 / CSS
 - Node.js / Express
+- Socket.io
 - Axios
 - Firebase
 
