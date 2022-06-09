@@ -1,4 +1,3 @@
-import lang from "../translation";
 import "./Loading.css";
 
 export default function Loading({ error }) {
