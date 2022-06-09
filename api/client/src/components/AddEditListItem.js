@@ -23,7 +23,6 @@ export default function AddlistItem({
     try {
       new URL(url);
     } catch (e) {
-      console.error(e);
       return false;
     }
     return true;
@@ -113,7 +112,7 @@ export default function AddlistItem({
           />
 
           <div className="new-item-container">
-            {editData  && editData.pictureUrl? (
+            {editData && editData.pictureUrl ? (
               <img
                 className="fa-gift"
                 src={editData.pictureUrl}

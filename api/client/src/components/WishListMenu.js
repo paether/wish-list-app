@@ -37,8 +37,7 @@ export default function WishListMenu() {
       });
       setListName(response.data);
     } catch (error) {
-      console.log("cannot get listname");
-    } finally {
+      console.log(error);
     }
   };
 
@@ -105,7 +104,7 @@ export default function WishListMenu() {
           showAdmin,
           toggleButtonElement,
           secretKeyElement,
-          setWishListId
+          setWishListId,
         }}
       />
     );
